@@ -2,7 +2,9 @@
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
+    int maxVolume = 2;
+    int expansionRate = 2;
+    Resume[] storage = new Resume[maxVolume];
     int storageSize = 0;
 
     void clear() {
@@ -13,8 +15,20 @@ public class ArrayStorage {
     }
 
     void save(Resume resume) {
+        if (storageSize == maxVolume) {
+            expandStorage();
+        }
         storage[storageSize] = resume;
         storageSize++;
+    }
+
+    private void expandStorage() {
+        int expandedSize = this.storageSize * this.expansionRate;
+        Resume[] expandedStorage = new Resume[expandedSize];
+        System.arraycopy(this.storage, 0, expandedStorage, 0, storageSize);
+        this.storage = expandedStorage;
+        maxVolume = expandedSize;
+        System.out.println("Размер хранилища увеличен до " + maxVolume);
     }
 
     Resume get(String uuid) {
