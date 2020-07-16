@@ -2,7 +2,7 @@
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private int maxSize = 2;
+    private int maxSize = 10000;
     private Resume[] storage = new Resume[maxSize];
     private int storageSize = 0;
 
@@ -16,31 +16,29 @@ public class ArrayStorage {
     void save(Resume resume) {
         if (storageSize == maxSize) {
             System.out.println("Добавление невозможно - хранилище переполнено");
+        } else if (findIndex(resume.uuid) == -1) {
+            storage[storageSize] = resume;
+            storageSize++;
         } else {
-            if (findIndex(resume.uuid) == -1) {
-                storage[storageSize] = resume;
-                storageSize++;
-            } else {
-                System.out.println("Резюме с таким uuid уже добавлено");
-            }
+            System.out.println("Резюме с таким uuid уже добавлено");
         }
     }
 
     Resume get(String uuid) {
-        int id = findIndex(uuid);
-        if (id == -1) {
+        int index = findIndex(uuid);
+        if (index == -1) {
             return null;
         }
-        return storage[id];
+        return storage[index];
     }
 
     void delete(String uuid) {
-        int id = findIndex(uuid);
-        if (id != -1) {
-            if (id == storageSize - 1) {
-                storage[id] = null;
+        int index = findIndex(uuid);
+        if (index != -1) {
+            if (index == storageSize - 1) {
+                storage[index] = null;
             } else {
-                storage[id] = storage[storageSize - 1];
+                storage[index] = storage[storageSize - 1];
                 storage[storageSize - 1] = null;
             }
             storageSize--;
