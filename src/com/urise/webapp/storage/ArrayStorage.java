@@ -1,4 +1,5 @@
 package com.urise.webapp.storage;
+
 import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -12,38 +13,24 @@ public class ArrayStorage {
     private int storageSize = 0;
 
     public void clear() {
-        Arrays.fill(storage, null);
+        Arrays.fill(storage, 0, storageSize, null);
         storageSize = 0;
     }
 
-    private int findIndex(String uuid) {
-        for (int i = 0; i < storageSize; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private boolean checkPresence(String uuid) {
-        return findIndex(uuid) != -1;
-    }
-
     public void save(Resume resume) {
-        System.out.println(checkPresence(resume.getUuid()));
         if (storageSize == maxSize) {
             System.out.println("Добавление невозможно - хранилище переполнено");
-        } else if (!checkPresence(resume.getUuid())) {
+        } else if (findIndex(resume.getUuid()) == -1) {
             storage[storageSize] = resume;
             storageSize++;
         } else {
-            System.out.println("Резюме с таким uuid уже добавлено");
+            System.out.println("Резюме " + resume.getUuid() + " уже добавлено");
         }
     }
 
     public Resume get(String uuid) {
         int index = findIndex(uuid);
-        if (!checkPresence(uuid)) {
+        if (index == -1) {
             return null;
         }
         return storage[index];
@@ -51,7 +38,7 @@ public class ArrayStorage {
 
     public void delete(String uuid) {
         int index = findIndex(uuid);
-        if (checkPresence(uuid)) {
+        if (index != -1) {
             if (index == storageSize - 1) {
                 storage[index] = null;
             } else {
@@ -60,7 +47,7 @@ public class ArrayStorage {
             }
             storageSize--;
         } else {
-            System.out.println("Не найдено такое резюме");
+            System.out.println("Не найдено резюме " + uuid);
         }
 
     }
@@ -70,7 +57,7 @@ public class ArrayStorage {
         if (index != -1) {
             storage[index] = resume;
         } else {
-            System.out.println("Не найдено такое резюме");
+            System.out.println("Не найдено резюме " + resume.getUuid());
         }
     }
 
@@ -86,4 +73,14 @@ public class ArrayStorage {
     public int size() {
         return storageSize;
     }
+
+    private int findIndex(String uuid) {
+        for (int i = 0; i < storageSize; i++) {
+            if (storage[i].getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
 }
