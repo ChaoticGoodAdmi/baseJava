@@ -1,3 +1,7 @@
+package com.urise.webapp.storage;
+
+import com.urise.webapp.model.Resume;
+
 /**
  * Array based storage for Resumes
  */
@@ -6,17 +10,17 @@ public class ArrayStorage {
     private Resume[] storage = new Resume[maxSize];
     private int storageSize = 0;
 
-    void clear() {
+    public void clear() {
         for (int i = 0; i < storageSize; i++) {
             storage[i] = null;
         }
         storageSize = 0;
     }
 
-    void save(Resume resume) {
+    public void save(Resume resume) {
         if (storageSize == maxSize) {
             System.out.println("Добавление невозможно - хранилище переполнено");
-        } else if (findIndex(resume.uuid) == -1) {
+        } else if (findIndex(resume.getUuid()) == -1) {
             storage[storageSize] = resume;
             storageSize++;
         } else {
@@ -24,7 +28,7 @@ public class ArrayStorage {
         }
     }
 
-    Resume get(String uuid) {
+    public Resume get(String uuid) {
         int index = findIndex(uuid);
         if (index == -1) {
             return null;
@@ -32,7 +36,7 @@ public class ArrayStorage {
         return storage[index];
     }
 
-    void delete(String uuid) {
+    public void delete(String uuid) {
         int index = findIndex(uuid);
         if (index != -1) {
             if (index == storageSize - 1) {
@@ -50,7 +54,7 @@ public class ArrayStorage {
 
     private int findIndex(String uuid) {
         for (int i = 0; i < storageSize; i++) {
-            if (storage[i].uuid.equals(uuid)) {
+            if (storage[i].getUuid().equals(uuid)) {
                 return i;
             }
         }
@@ -60,13 +64,13 @@ public class ArrayStorage {
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    Resume[] getAll() {
+    public Resume[] getAll() {
         Resume[] resumes = new Resume[storageSize];
         System.arraycopy(storage, 0, resumes, 0, storageSize);
         return resumes;
     }
 
-    int size() {
+    public int size() {
         return storageSize;
     }
 }
