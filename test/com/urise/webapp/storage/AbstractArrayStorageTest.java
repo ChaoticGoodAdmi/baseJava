@@ -4,7 +4,6 @@ import com.urise.webapp.exceptions.ExistStorageException;
 import com.urise.webapp.exceptions.NotExistStorageException;
 import com.urise.webapp.exceptions.StorageException;
 import com.urise.webapp.model.Resume;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,7 +38,7 @@ public class AbstractArrayStorageTest {
     @Test
     public void clear() {
         storage.clear();
-        Assert.assertEquals(0, storage.size());
+        assertEquals(0, storage.size());
     }
 
     @Test
@@ -118,10 +117,8 @@ public class AbstractArrayStorageTest {
 
     @Test
     public void getAll() {
-        Assert.assertEquals(3, storage.size());
-        Assert.assertEquals(UUID_1, storage.get(UUID_1).getUuid());
-        Assert.assertEquals(UUID_2, storage.get(UUID_2).getUuid());
-        Assert.assertEquals(UUID_3, storage.get(UUID_3).getUuid());
+        Resume[] resumes = storage.getAll();
+        assertEquals(3, resumes.length);
     }
 
     @Test
