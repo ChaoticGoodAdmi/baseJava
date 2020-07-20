@@ -9,9 +9,9 @@ import java.util.Arrays;
 
 public abstract class AbstractArrayStorage implements Storage {
 
-    protected static final int MAX_SIZE = 10000;
+    private static final int MAX_SIZE = 10000;
     public Resume[] storage = new Resume[MAX_SIZE];
-    protected int storageSize = 0;
+    int storageSize = 0;
 
     public void clear() {
         Arrays.fill(storage, 0, storageSize, null);
@@ -37,7 +37,7 @@ public abstract class AbstractArrayStorage implements Storage {
                 storage[index] = null;
             } else {
                 if (storageSize - index >= 0) {
-                    System.arraycopy(storage, index + 1, storage, index, storageSize - index);
+                    removeFromStorage(index);
                 }
             }
             storageSize--;
@@ -77,4 +77,6 @@ public abstract class AbstractArrayStorage implements Storage {
     protected abstract int findIndex(String uuid);
 
     protected abstract void insertToStorage(Resume resume, int index);
+
+    protected abstract void removeFromStorage(int index);
 }

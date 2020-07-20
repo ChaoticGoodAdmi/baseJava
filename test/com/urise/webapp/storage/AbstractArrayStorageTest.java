@@ -10,7 +10,8 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class AbstractArrayStorageTest {
 
@@ -23,7 +24,7 @@ public class AbstractArrayStorageTest {
     private static final Resume r2 = new Resume(UUID_2);
     private static final Resume r3 = new Resume(UUID_3);
 
-    protected AbstractArrayStorageTest(Storage storage) {
+    AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
     }
 
