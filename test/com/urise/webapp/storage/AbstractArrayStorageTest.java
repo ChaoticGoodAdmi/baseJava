@@ -18,9 +18,9 @@ public class AbstractArrayStorageTest {
     private static final String UUID_2 = "UUID_2";
     private static final String UUID_3 = "UUID_3";
 
-    private static final Resume r1 = new Resume(UUID_1);
-    private static final Resume r2 = new Resume(UUID_2);
-    private static final Resume r3 = new Resume(UUID_3);
+    private static final Resume R_1 = new Resume(UUID_1);
+    private static final Resume R_2 = new Resume(UUID_2);
+    private static final Resume R_3 = new Resume(UUID_3);
 
     AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
@@ -29,9 +29,9 @@ public class AbstractArrayStorageTest {
     @Before
     public void setUp(){
         storage.clear();
-        storage.save(r3);
-        storage.save(r2);
-        storage.save(r1);
+        storage.save(R_3);
+        storage.save(R_2);
+        storage.save(R_1);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class AbstractArrayStorageTest {
     @Test
     public void saveExistent() {
         try {
-            storage.save(r1);
+            storage.save(R_1);
             fail();
         } catch (ExistStorageException es) {
             assertEquals(3, storage.size());
@@ -76,7 +76,7 @@ public class AbstractArrayStorageTest {
     @Test
     public void deleteExistent() {
         int initialSize = storage.size();
-        storage.delete(r1.getUuid());
+        storage.delete(R_1.getUuid());
         try {
             assertEquals(UUID_1, storage.get(UUID_1).toString());
             fail();
@@ -118,9 +118,9 @@ public class AbstractArrayStorageTest {
     public void getAll() {
         Resume[] resumes = storage.getAll();
         assertEquals(3, resumes.length);
-        assertTrue(contain(resumes, r1));
-        assertTrue(contain(resumes, r2));
-        assertTrue(contain(resumes, r3));
+        assertTrue(contain(resumes, R_1));
+        assertTrue(contain(resumes, R_2));
+        assertTrue(contain(resumes, R_3));
     }
 
     @Test
@@ -130,8 +130,8 @@ public class AbstractArrayStorageTest {
 
     @Test
     public void getExistent() {
-        Resume r = storage.get(r2.getUuid());
-        assertEquals(r.getUuid(), r2.getUuid());
+        Resume r = storage.get(R_2.getUuid());
+        assertEquals(r.getUuid(), R_2.getUuid());
     }
 
     @Test
