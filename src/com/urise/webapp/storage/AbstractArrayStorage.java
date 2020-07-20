@@ -9,7 +9,7 @@ import java.util.Arrays;
 
 public abstract class AbstractArrayStorage implements Storage {
 
-    protected static final int MAX_SIZE = 100;
+    protected static final int MAX_SIZE = 10000;
     public Resume[] storage = new Resume[MAX_SIZE];
     protected int storageSize = 0;
 
