@@ -153,8 +153,8 @@ public class AbstractArrayStorageTest {
     }
 
     private boolean contain(Resume[] resumes, Resume resume) {
-        for (int i = 0; i < resumes.length; i++) {
-            if(resumes[i].equals(resume)) {
+        for (Resume r : resumes) {
+            if (r.equals(resume)) {
                 return true;
             }
         }
