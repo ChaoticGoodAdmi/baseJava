@@ -1,6 +1,7 @@
 package com.urise.webapp;
 
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.Storage;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -15,12 +16,14 @@ public class MainReflection {
         System.out.println(field.getName());
         System.out.println(resume);
         field.set(resume, "uuid1_test");
-        System.out.println(invokeToStringFromResume(resume));
+        System.out.println(invokeMethodFromResume(resume, "toString"));
+        field.setAccessible(false);
     }
 
-    public static String invokeToStringFromResume(Resume resume) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = resume.getClass().getDeclaredMethod("toString");
+    public static String invokeMethodFromResume(Resume resume, String methodName) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = resume.getClass().getDeclaredMethod(methodName);
         return (String) method.invoke(resume);
 
     }
+
 }

@@ -2,13 +2,14 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exceptions.ExistStorageException;
 import com.urise.webapp.exceptions.NotExistStorageException;
+import com.urise.webapp.exceptions.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
 
 public abstract class AbstractArrayStorage implements Storage {
 
-    protected static final int MAX_SIZE = 100000;
+    protected static final int MAX_SIZE = 100;
     public Resume[] storage = new Resume[MAX_SIZE];
     protected int storageSize = 0;
 
@@ -18,10 +19,11 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
     public void save(Resume resume) {
+        int index = findIndex(resume.getUuid());
         if (storageSize == MAX_SIZE) {
-            System.out.println("Добавление невозможно - хранилище переполнено");
+            throw new StorageException(resume.getUuid(), "Хранилище переполнено");
         } else if (findIndex(resume.getUuid()) < 0) {
-            insertToStorage(resume);
+            insertToStorage(resume, index);
             storageSize++;
         } else {
             throw new ExistStorageException(resume.getUuid());
@@ -67,12 +69,12 @@ public abstract class AbstractArrayStorage implements Storage {
     public Resume get(String uuid) {
         int index = findIndex(uuid);
         if (index < 0) {
-            return null;
+            throw new NotExistStorageException(uuid);
         }
         return storage[index];
     }
 
     protected abstract int findIndex(String uuid);
 
-    protected abstract void insertToStorage(Resume resume);
+    protected abstract void insertToStorage(Resume resume, int index);
 }

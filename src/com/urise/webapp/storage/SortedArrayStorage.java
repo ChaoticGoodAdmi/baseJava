@@ -16,15 +16,10 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void insertToStorage(Resume resume) {
-        int index = storageSize;
-        for (int i = 0; i < storageSize; i++) {
-            if (storage[i].compareTo(resume) > 0) {
-                index = i;
-            }
-        }
-        vacateSpaceForInsert(index);
-        storage[index] = resume;
+    protected void insertToStorage(Resume resume, int index) {
+        int indexToInsert = -index - 1;
+        vacateSpaceForInsert(indexToInsert);
+        storage[indexToInsert] = resume;
     }
 
     private void vacateSpaceForInsert(int indexToVacate) {
