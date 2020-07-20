@@ -9,8 +9,7 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class AbstractArrayStorageTest {
 
@@ -119,6 +118,9 @@ public class AbstractArrayStorageTest {
     public void getAll() {
         Resume[] resumes = storage.getAll();
         assertEquals(3, resumes.length);
+        assertTrue(contain(resumes, r1));
+        assertTrue(contain(resumes, r2));
+        assertTrue(contain(resumes, r3));
     }
 
     @Test
@@ -148,5 +150,14 @@ public class AbstractArrayStorageTest {
         int maxSize = (int) field.get(storage);
         field.setAccessible(false);
         return maxSize;
+    }
+
+    private boolean contain(Resume[] resumes, Resume resume) {
+        for (int i = 0; i < resumes.length; i++) {
+            if(resumes[i].equals(resume)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
