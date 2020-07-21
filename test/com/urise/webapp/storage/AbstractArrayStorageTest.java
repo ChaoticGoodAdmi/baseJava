@@ -118,9 +118,9 @@ public class AbstractArrayStorageTest {
     public void getAll() {
         Resume[] resumes = storage.getAll();
         assertEquals(3, resumes.length);
-        assertTrue(contain(resumes, R_1));
-        assertTrue(contain(resumes, R_2));
-        assertTrue(contain(resumes, R_3));
+        assertTrue(assertContainment(resumes, R_1));
+        assertTrue(assertContainment(resumes, R_2));
+        assertTrue(assertContainment(resumes, R_3));
     }
 
     @Test
@@ -152,7 +152,7 @@ public class AbstractArrayStorageTest {
         return maxSize;
     }
 
-    private boolean contain(Resume[] resumes, Resume resume) {
+    private boolean assertContainment(Resume[] resumes, Resume resume) {
         for (Resume r : resumes) {
             if (r.equals(resume)) {
                 return true;
