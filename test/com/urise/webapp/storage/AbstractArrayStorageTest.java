@@ -7,11 +7,9 @@ import com.urise.webapp.model.Resume;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Field;
-
 import static org.junit.Assert.*;
 
-public class AbstractArrayStorageTest {
+public abstract class AbstractArrayStorageTest {
 
     private Storage storage;
     private static final String UUID_1 = "UUID_1";
@@ -27,7 +25,7 @@ public class AbstractArrayStorageTest {
     }
 
     @Before
-    public void setUp(){
+    public void setUp() {
         storage.clear();
         storage.save(R_3);
         storage.save(R_2);
@@ -45,29 +43,34 @@ public class AbstractArrayStorageTest {
         int initialSize = storage.size();
         Resume r4 = new Resume("UUID_4");
         storage.save(r4);
-        assertEquals(1, storage.size() - initialSize);
-        assertEquals(storage.get(r4.getUuid()).getUuid(), r4.getUuid());
+        assertEquals(initialSize + 1, storage.size());
+        assertEquals(storage.get(r4.getUuid()), r4);
     }
 
     @Test
     public void saveExistent() {
         try {
             storage.save(R_1);
-            fail();
+            fail("Сохранен объект, который уже есть в хранилище");
         } catch (ExistStorageException es) {
             assertEquals(3, storage.size());
+            assertEquals(R_1, storage.get(UUID_1));
         }
     }
 
     @Test
-    public void saveOverflow() throws NoSuchFieldException, IllegalAccessException {
-        int maxSize = getMaxSize();
-        for (int i = storage.size() + 1; i <= maxSize; i++) {
-            storage.save(new Resume());
+    public void saveOverflow() {
+        int maxSize = AbstractArrayStorage.MAX_SIZE;
+        try {
+            for (int i = storage.size() + 1; i <= maxSize; i++) {
+                storage.save(new Resume());
+            }
+        } catch (StorageException s) {
+            fail("Переполнение вызвано слишком рано");
         }
         try {
             storage.save(new Resume("UUID_TO_MUCH"));
-            fail();
+            fail("Переполнение не вызвано");
         } catch (StorageException s) {
             assertEquals(maxSize, storage.size());
         }
@@ -78,10 +81,10 @@ public class AbstractArrayStorageTest {
         int initialSize = storage.size();
         storage.delete(R_1.getUuid());
         try {
-            assertEquals(UUID_1, storage.get(UUID_1).toString());
-            fail();
+            storage.get(UUID_1);
+            fail("Удаленный объект найден в хранилище");
         } catch (NotExistStorageException nes) {
-            assertEquals(1, initialSize - storage.size());
+            assertEquals(initialSize - 1, storage.size());
         }
     }
 
@@ -90,9 +93,9 @@ public class AbstractArrayStorageTest {
         int initialSize = storage.size();
         try {
             storage.delete("UUID_NOT_THERE");
-            fail();
+            fail("Удаление несуществующего объекта из хранилища не вызвало исключения");
         } catch (NotExistStorageException nes) {
-            assertEquals(storage.size(),initialSize);
+            assertEquals(initialSize, storage.size());
         }
     }
 
@@ -100,7 +103,7 @@ public class AbstractArrayStorageTest {
     public void updateExistent() {
         Resume r4 = new Resume(UUID_3);
         storage.update(r4);
-        assertEquals(r4.getUuid(), storage.get(UUID_3).getUuid());
+        assertEquals(r4, storage.get(UUID_3));
     }
 
     @Test
@@ -108,7 +111,7 @@ public class AbstractArrayStorageTest {
         Resume r4 = new Resume("UUID_NOT_THERE");
         try {
             storage.update(r4);
-            fail();
+            fail("Перезапись несуществующего объекта из хранилища не вызвала исключения");
         } catch (NotExistStorageException ignored) {
 
         }
@@ -131,25 +134,17 @@ public class AbstractArrayStorageTest {
     @Test
     public void getExistent() {
         Resume r = storage.get(R_2.getUuid());
-        assertEquals(r.getUuid(), R_2.getUuid());
+        assertEquals(r, R_2);
     }
 
     @Test
     public void getNonExistent() {
         try {
             storage.get("UUID_NOT_THERE");
-            fail();
+            fail("Получение несуществующего объекта из хранилища не вызвало исключения");
         } catch (NotExistStorageException ignored) {
 
         }
-    }
-
-    private int getMaxSize() throws NoSuchFieldException, IllegalAccessException {
-        Field field = storage.getClass().getSuperclass().getDeclaredField("MAX_SIZE");
-        field.setAccessible(true);
-        int maxSize = (int) field.get(storage);
-        field.setAccessible(false);
-        return maxSize;
     }
 
     private boolean assertContainment(Resume[] resumes, Resume resume) {
