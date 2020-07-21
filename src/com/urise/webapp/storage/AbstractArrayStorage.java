@@ -10,7 +10,7 @@ import java.util.Arrays;
 public abstract class AbstractArrayStorage implements Storage {
 
     private static final int MAX_SIZE = 10000;
-    public Resume[] storage = new Resume[MAX_SIZE];
+    Resume[] storage = new Resume[MAX_SIZE];
     int storageSize = 0;
 
     public void clear() {
@@ -35,11 +35,10 @@ public abstract class AbstractArrayStorage implements Storage {
         if (index >= 0) {
             if (index == storageSize - 1) {
                 storage[index] = null;
-            } else {
-                if (storageSize - index >= 0) {
-                    removeFromStorage(index);
-                }
+            } else if (storageSize - index >= 0) {
+                removeFromStorage(index);
             }
+            storage[storageSize - 1] = null;
             storageSize--;
         } else {
             throw new NotExistStorageException(uuid);
