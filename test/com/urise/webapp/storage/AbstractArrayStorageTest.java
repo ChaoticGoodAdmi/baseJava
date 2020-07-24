@@ -47,18 +47,12 @@ public abstract class AbstractArrayStorageTest {
         assertEquals(storage.get(r4.getUuid()), r4);
     }
 
-    @Test
+    @Test(expected = ExistStorageException.class)
     public void saveExistent() {
-        try {
-            storage.save(R_1);
-            fail("Сохранен объект, который уже есть в хранилище");
-        } catch (ExistStorageException es) {
-            assertEquals(3, storage.size());
-            assertEquals(R_1, storage.get(UUID_1));
-        }
+        storage.save(R_1);
     }
 
-    @Test
+    @Test(expected = StorageException.class)
     public void saveOverflow() {
         int maxSize = AbstractArrayStorage.MAX_SIZE;
         try {
@@ -68,35 +62,21 @@ public abstract class AbstractArrayStorageTest {
         } catch (StorageException s) {
             fail("Переполнение вызвано слишком рано");
         }
-        try {
-            storage.save(new Resume("UUID_TO_MUCH"));
-            fail("Переполнение не вызвано");
-        } catch (StorageException s) {
-            assertEquals(maxSize, storage.size());
-        }
+        storage.save(new Resume("UUID_TO_MUCH"));
+        assertEquals(maxSize, storage.size());
     }
 
-    @Test
+    @Test(expected = NotExistStorageException.class)
     public void deleteExistent() {
         int initialSize = storage.size();
         storage.delete(R_1.getUuid());
-        try {
-            storage.get(UUID_1);
-            fail("Удаленный объект найден в хранилище");
-        } catch (NotExistStorageException nes) {
-            assertEquals(initialSize - 1, storage.size());
-        }
+        assertEquals(initialSize - 1, storage.size());
+        storage.get(R_1.getUuid());
     }
 
-    @Test
+    @Test(expected = NotExistStorageException.class)
     public void deleteNonExistent() {
-        int initialSize = storage.size();
-        try {
-            storage.delete("UUID_NOT_THERE");
-            fail("Удаление несуществующего объекта из хранилища не вызвало исключения");
-        } catch (NotExistStorageException nes) {
-            assertEquals(initialSize, storage.size());
-        }
+        storage.delete("UUID_NOT_THERE");
     }
 
     @Test
@@ -106,15 +86,10 @@ public abstract class AbstractArrayStorageTest {
         assertEquals(r4, storage.get(UUID_3));
     }
 
-    @Test
+    @Test(expected = NotExistStorageException.class)
     public void updateNonExistent() {
         Resume r4 = new Resume("UUID_NOT_THERE");
-        try {
-            storage.update(r4);
-            fail("Перезапись несуществующего объекта из хранилища не вызвала исключения");
-        } catch (NotExistStorageException ignored) {
-
-        }
+        storage.update(r4);
     }
 
     @Test
@@ -137,14 +112,9 @@ public abstract class AbstractArrayStorageTest {
         assertEquals(r, R_2);
     }
 
-    @Test
+    @Test(expected = NotExistStorageException.class)
     public void getNonExistent() {
-        try {
-            storage.get("UUID_NOT_THERE");
-            fail("Получение несуществующего объекта из хранилища не вызвало исключения");
-        } catch (NotExistStorageException ignored) {
-
-        }
+        storage.get("UUID_NOT_THERE");
     }
 
     private boolean assertContainment(Resume[] resumes, Resume resume) {
