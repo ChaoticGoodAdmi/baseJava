@@ -1,12 +1,12 @@
 package com.urise.webapp;
 
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.storage.MapStorage;
+import com.urise.webapp.storage.ListStorage;
 import com.urise.webapp.storage.Storage;
 
 public class MainCollection {
 
-    private final static Storage LIST_STORAGE = new MapStorage();
+    private final static Storage LIST_STORAGE = new ListStorage();
 
     public static void main(String[] args) {
 

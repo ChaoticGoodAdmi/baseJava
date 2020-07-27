@@ -9,24 +9,21 @@ import static org.junit.Assert.fail;
 
 public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
 
-    private AbstractArrayStorage arrayStorage;
-
-    AbstractArrayStorageTest(AbstractArrayStorage storage) {
-        super(storage);
-        arrayStorage = storage;
+    AbstractArrayStorageTest(AbstractArrayStorage arrayStorage) {
+        super(arrayStorage);
     }
 
     @Test(expected = StorageException.class)
     public void saveOverflow() {
         int maxSize = AbstractArrayStorage.MAX_SIZE;
         try {
-            for (int i = arrayStorage.size() + 1; i <= maxSize; i++) {
-                arrayStorage.save(new Resume());
+            for (int i = storage.size() + 1; i <= maxSize; i++) {
+                storage.save(new Resume());
             }
         } catch (StorageException s) {
             fail("Переполнение вызвано слишком рано");
         }
-        arrayStorage.save(new Resume("UUID_TO_MUCH"));
-        assertEquals(maxSize, arrayStorage.size());
+        storage.save(new Resume("UUID_TO_MUCH"));
+        assertEquals(maxSize, storage.size());
     }
 }
