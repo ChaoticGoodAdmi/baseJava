@@ -30,7 +30,7 @@ public class MainCollection {
         System.out.println("Size: " + LIST_STORAGE.size());
     }
 
-    static void printAll() {
+    private static void printAll() {
         System.out.println("\nGet All");
         for (Resume r : LIST_STORAGE.getAll()) {
             System.out.println(r);
