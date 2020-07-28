@@ -1,7 +1,5 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exceptions.ExistStorageException;
-import com.urise.webapp.exceptions.NotExistStorageException;
 import com.urise.webapp.exceptions.StorageException;
 import com.urise.webapp.model.Resume;
 
@@ -66,19 +64,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return storageSize;
     }
 
-    protected void checkAbsence(Resume resume) {
-        int index = findIndex(resume.getUuid());
-        if (index >=0) {
-            throw new ExistStorageException(resume.getUuid());
-        }
+    protected Object find(String uuid) {
+        return findIndex(uuid);
     }
 
-    protected Object getKeyIfExistent(String uuid) {
-        int index = findIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return index;
+    protected boolean isFound(Object key) {
+        return (int) key >= 0;
     }
 
     protected abstract int findIndex(String uuid);

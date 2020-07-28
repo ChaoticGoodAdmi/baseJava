@@ -1,10 +1,9 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exceptions.ExistStorageException;
-import com.urise.webapp.exceptions.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ListStorage extends AbstractStorage {
     List<Resume> storage = new ArrayList<>();
@@ -47,18 +46,13 @@ public class ListStorage extends AbstractStorage {
         return storage.size();
     }
 
-    protected void checkAbsence(Resume resume) {
-        String uuid = resume.getUuid();
-        if (storage.contains(resume)) {
-            throw new ExistStorageException(uuid);
-        }
-    }
-
-    protected Object getKeyIfExistent(String uuid) {
+    protected Object find(String uuid) {
         Resume resume = new Resume(uuid);
-        if (!storage.contains(new Resume(uuid))) {
-            throw new NotExistStorageException(uuid);
-        }
         return storage.indexOf(resume);
     }
+
+    protected boolean isFound(Object key) {
+        return (int) key >= 0;
+    }
+
 }
