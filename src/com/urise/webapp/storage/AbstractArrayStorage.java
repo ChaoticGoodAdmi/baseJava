@@ -8,8 +8,8 @@ import java.util.Arrays;
 public abstract class AbstractArrayStorage extends AbstractStorage {
 
     protected static final int MAX_SIZE = 10000;
-    Resume[] storage = new Resume[MAX_SIZE];
-    int storageSize = 0;
+    protected Resume[] storage = new Resume[MAX_SIZE];
+    protected int storageSize = 0;
 
     @Override
     public void clear() {
@@ -19,7 +19,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     public void doSave(Resume resume) {
-        checkAbsence(resume);
         if (storageSize == MAX_SIZE) {
             throw new StorageException(resume.getUuid(), "Хранилище переполнено");
         } else {
@@ -42,8 +41,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     public Resume doGet(Object key) {
-        int index = (int) key;
-        return storage[index];
+        return storage[(int) key];
     }
 
     @Override
@@ -55,8 +53,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     protected void doUpdate(Object key, Resume resume) {
-        int index = (int) key;
-        storage[index] = resume;
+        storage[(int) key] = resume;
     }
 
     @Override
