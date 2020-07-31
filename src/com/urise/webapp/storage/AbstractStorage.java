@@ -8,8 +8,8 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void save(Resume r) {
-        checkAbsence(r);
-        doSave(r);
+        Object index = checkAbsence(r);
+        doSave(r, index);
     }
 
     @Override
@@ -30,11 +30,12 @@ public abstract class AbstractStorage implements Storage {
         doUpdate(key, r);
     }
 
-    private void checkAbsence(Resume resume) {
+    private Object checkAbsence(Resume resume) {
         Object index = findIndex(resume.getUuid());
         if (isFound(index)) {
             throw new ExistStorageException(resume.getUuid());
         }
+        return index;
     }
 
     private Object getKeyIfExistent(String uuid) {
@@ -47,7 +48,7 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract void doUpdate(Object key, Resume resume);
 
-    protected abstract void doSave(Resume resume);
+    protected abstract void doSave(Resume resume, Object index);
 
     protected abstract Resume doGet(Object key);
 

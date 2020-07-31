@@ -18,11 +18,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public void doSave(Resume resume) {
+    public void doSave(Resume resume, Object index) {
         if (storageSize == MAX_SIZE) {
             throw new StorageException(resume.getUuid(), "Хранилище переполнено");
         } else {
-            insertToStorage(resume, (Integer) findIndex(resume.getUuid()));
+            insertToStorage(resume, (Integer) index);
             storageSize++;
         }
     }
