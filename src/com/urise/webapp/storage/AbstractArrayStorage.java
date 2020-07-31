@@ -8,8 +8,8 @@ import java.util.Arrays;
 public abstract class AbstractArrayStorage extends AbstractStorage {
 
     protected static final int MAX_SIZE = 10000;
-    protected Resume[] storage = new Resume[MAX_SIZE];
-    protected int storageSize = 0;
+    Resume[] storage = new Resume[MAX_SIZE];
+    private int storageSize = 0;
 
     @Override
     public void clear() {
@@ -22,7 +22,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         if (storageSize == MAX_SIZE) {
             throw new StorageException(resume.getUuid(), "Хранилище переполнено");
         } else {
-            insertToStorage(resume, findIndex(resume.getUuid()));
+            insertToStorage(resume, (Integer) findIndex(resume.getUuid()));
             storageSize++;
         }
     }
@@ -61,15 +61,9 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return storageSize;
     }
 
-    protected Object find(String uuid) {
-        return findIndex(uuid);
-    }
-
     protected boolean isFound(Object key) {
         return (int) key >= 0;
     }
-
-    protected abstract int findIndex(String uuid);
 
     protected abstract void insertToStorage(Resume resume, int index);
 

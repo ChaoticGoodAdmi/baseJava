@@ -10,9 +10,9 @@ import java.util.Arrays;
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected int findIndex(String uuid) {
+    protected Object findIndex(String uuid) {
         Resume searchKey = new Resume(uuid);
-        return Arrays.binarySearch(storage, 0, storageSize, searchKey);
+        return Arrays.binarySearch(storage, 0, size(), searchKey);
     }
 
     @Override
@@ -23,13 +23,13 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     private void vacateSpaceForInsert(int indexToVacate) {
-        if (storageSize - 1 - indexToVacate >= 0)
-            System.arraycopy(storage, indexToVacate, storage, indexToVacate + 1, storageSize - indexToVacate);
+        if (size() - 1 - indexToVacate >= 0)
+            System.arraycopy(storage, indexToVacate, storage, indexToVacate + 1, size() - indexToVacate);
     }
 
     @Override
     protected void removeFromStorage(int index) {
-        System.arraycopy(storage, index + 1, storage, index, storageSize - index);
+        System.arraycopy(storage, index + 1, storage, index, size() - index);
     }
 
 }

@@ -31,21 +31,19 @@ public abstract class AbstractStorage implements Storage {
     }
 
     private void checkAbsence(Resume resume) {
-        Object index = find(resume.getUuid());
+        Object index = findIndex(resume.getUuid());
         if (isFound(index)) {
             throw new ExistStorageException(resume.getUuid());
         }
     }
 
     private Object getKeyIfExistent(String uuid) {
-        Object index = find(uuid);
+        Object index = findIndex(uuid);
         if (!isFound(index)) {
             throw new NotExistStorageException(uuid);
         }
         return index;
     }
-
-    public abstract int size();
 
     protected abstract void doUpdate(Object key, Resume resume);
 
@@ -55,7 +53,7 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract void doDelete(Object key);
 
-    protected abstract Object find(String uuid);
+    protected abstract Object findIndex(String uuid);
 
     protected abstract boolean isFound(Object key);
 
