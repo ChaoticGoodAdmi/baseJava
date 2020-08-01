@@ -44,7 +44,7 @@ public class ListStorage extends AbstractStorage {
         return storage.size();
     }
 
-    protected Object findIndex(String uuid) {
+    protected Object findSearchKey(String uuid) {
         Resume resume = new Resume(uuid);
         return storage.indexOf(resume);
     }

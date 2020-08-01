@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MapStorage extends AbstractStorage {
-    Map<String, Resume> storage = new HashMap<>();
+    private Map<String, Resume> storage = new HashMap<>();
 
     @Override
     public void clear() {
@@ -44,7 +44,7 @@ public class MapStorage extends AbstractStorage {
         return storage.size();
     }
 
-    protected Object findIndex(String uuid) {
+    protected Object findSearchKey(String uuid) {
         if (storage.containsKey(uuid)) {
             return storage.get(uuid).getUuid();
         } else return null;
