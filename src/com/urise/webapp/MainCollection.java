@@ -1,12 +1,14 @@
 package com.urise.webapp;
 
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.storage.ListStorage;
+import com.urise.webapp.storage.MapStorage;
 import com.urise.webapp.storage.Storage;
+
+import java.util.List;
 
 public class MainCollection {
 
-    private final static Storage LIST_STORAGE = new ListStorage();
+    private final static Storage LIST_STORAGE = new MapStorage();
 
     public static void main(String[] args) {
 
@@ -28,12 +30,12 @@ public class MainCollection {
         LIST_STORAGE.clear();
         printAll();
         System.out.println("Size: " + LIST_STORAGE.size());
+
     }
 
     private static void printAll() {
         System.out.println("\nGet All");
-        for (Resume r : LIST_STORAGE.getAll()) {
-            System.out.println(r);
-        }
+        List<Resume> resumeList = LIST_STORAGE.getAllSorted();
+        resumeList.forEach(System.out::println);
     }
 }

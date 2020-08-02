@@ -18,7 +18,7 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
         int maxSize = AbstractArrayStorage.MAX_SIZE;
         try {
             for (int i = storage.size() + 1; i <= maxSize; i++) {
-                storage.save(new Resume());
+                storage.save(new Resume("name"));
             }
         } catch (StorageException s) {
             fail("Переполнение вызвано слишком рано");
