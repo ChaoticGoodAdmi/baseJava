@@ -1,14 +1,14 @@
 package com.urise.webapp;
 
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.storage.MapStorage;
+import com.urise.webapp.storage.MapStorageByUUID;
 import com.urise.webapp.storage.Storage;
 
 import java.util.List;
 
 public class MainCollection {
 
-    private final static Storage LIST_STORAGE = new MapStorage();
+    private final static Storage LIST_STORAGE = new MapStorageByUUID();
 
     public static void main(String[] args) {
 
