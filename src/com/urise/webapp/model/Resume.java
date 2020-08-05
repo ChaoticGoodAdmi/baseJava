@@ -1,5 +1,7 @@
 package com.urise.webapp.model;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -7,9 +9,9 @@ import java.util.UUID;
  */
 public class Resume implements Comparable<Resume> {
 
-    // Unique identifier
     private final String uuid;
     private final String fullName;
+    private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -18,6 +20,7 @@ public class Resume implements Comparable<Resume> {
     public Resume(String uuid, String fullName) {
         this.uuid = uuid;
         this.fullName = fullName;
+
     }
 
     public String getUuid() {
@@ -26,6 +29,14 @@ public class Resume implements Comparable<Resume> {
 
     public String getFullName() {
         return fullName;
+    }
+
+    public void addContact(ContactType type, String link) {
+        contacts.put(type, link);
+    }
+
+    public String getContact(ContactType type) {
+        return contacts.get(type);
     }
 
     @Override
