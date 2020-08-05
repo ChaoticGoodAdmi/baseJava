@@ -21,7 +21,7 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
                 storage.save(new Resume("name"));
             }
         } catch (StorageException s) {
-            fail("Переполнение вызвано слишком рано");
+            fail("Overflowing thrown too early");
         }
         storage.save(new Resume("UUID_TO_MUCH"));
         assertEquals(maxSize, storage.size());

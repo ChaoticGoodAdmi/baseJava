@@ -6,7 +6,7 @@ import com.urise.webapp.model.Resume;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     protected static final int MAX_SIZE = 10000;
     protected Resume[] storage = new Resume[MAX_SIZE];
@@ -19,18 +19,18 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public void doSave(Resume resume, Object searchKey) {
+    public void doSave(Resume resume, Integer searchKey) {
         if (storageSize == MAX_SIZE) {
-            throw new StorageException(resume.getUuid(), "Хранилище переполнено");
+            throw new StorageException(resume.getUuid(), "Reached max size of a storage");
         } else {
-            insertToStorage(resume, (Integer) searchKey);
+            insertToStorage(resume, searchKey);
             storageSize++;
         }
     }
 
     @Override
-    public void doDelete(Object key) {
-        int index = (int) key;
+    public void doDelete(Integer key) {
+        int index = key;
         if (index == storageSize - 1) {
             storage[index] = null;
         } else if (storageSize - index >= 0) {
@@ -41,13 +41,13 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume doGet(Object key) {
-        return storage[(int) key];
+    public Resume doGet(Integer key) {
+        return storage[key];
     }
 
     @Override
-    protected void doUpdate(Object key, Resume resume) {
-        storage[(int) key] = resume;
+    protected void doUpdate(Integer key, Resume resume) {
+        storage[key] = resume;
     }
 
     @Override
@@ -55,8 +55,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return storageSize;
     }
 
-    protected boolean isFound(Object key) {
-        return (int) key >= 0;
+    protected boolean isFound(Integer key) {
+        return key >= 0;
     }
 
     @Override

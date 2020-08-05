@@ -5,7 +5,7 @@ import com.urise.webapp.model.Resume;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListStorage extends AbstractStorage {
+public class ListStorage extends AbstractStorage<Integer> {
     private List<Resume> storage = new ArrayList<>();
 
     @Override
@@ -14,18 +14,18 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public void doSave(Resume r, Object searchKey) {
+    public void doSave(Resume r, Integer searchKey) {
         storage.add(r);
     }
 
     @Override
-    public void doDelete(Object key) {
-        storage.remove((int) key);
+    public void doDelete(Integer key) {
+        storage.remove(key.intValue());
     }
 
     @Override
-    public Resume doGet(Object key) {
-        return storage.get((int) key);
+    public Resume doGet(Integer key) {
+        return storage.get(key);
     }
 
     @Override
@@ -34,8 +34,8 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public void doUpdate(Object key, Resume resume) {
-        storage.set((Integer) key, resume);
+    public void doUpdate(Integer key, Resume resume) {
+        storage.set(key, resume);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ListStorage extends AbstractStorage {
         return storage.size();
     }
 
-    protected Object findSearchKey(String uuid) {
+    protected Integer findSearchKey(String uuid) {
         for(Resume resume : storage) {
             if (resume.getUuid().equals(uuid))
                 return storage.indexOf(resume);
@@ -51,8 +51,8 @@ public class ListStorage extends AbstractStorage {
         return -1;
     }
 
-    protected boolean isFound(Object key) {
-        return (int) key >= 0;
+    protected boolean isFound(Integer key) {
+        return key >= 0;
     }
 
 }
