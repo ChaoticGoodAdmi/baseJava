@@ -79,7 +79,7 @@ public class ResumeTestData {
                                         LocalDate.of(2013, 3, 1),
                                         LocalDate.of(2013, 5, 1),
                                         "Course_title",
-                                        ""
+                                        null
                                 ),
                                 new Business(
                                         "University_2",
@@ -87,7 +87,7 @@ public class ResumeTestData {
                                         LocalDate.of(2012, 4, 1),
                                         LocalDate.of(2014, 10, 1),
                                         "Course_title",
-                                        ""
+                                        null
                                 )
                         ))
                 )
@@ -113,7 +113,6 @@ public class ResumeTestData {
         for (SectionType type : SectionType.values()) {
             System.out.println(type.getTitle());
             System.out.println(r.getSection(type));
-            System.out.println();
         }
     }
 }
