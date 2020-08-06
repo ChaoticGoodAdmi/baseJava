@@ -18,6 +18,10 @@ public class ListSection<T> implements Section {
         return new ListSection<>(list);
     }
 
+    public List<T> getList() {
+        return list;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

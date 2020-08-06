@@ -106,12 +106,14 @@ public class ResumeTestData {
         for (ContactType type : ContactType.values()) {
             System.out.println(type.getTitle() + ": " + r.getContact(type));
         }
+        System.out.println();
     }
 
     private static void printSections(Resume r) {
         for (SectionType type : SectionType.values()) {
             System.out.println(type.getTitle());
             System.out.println(r.getSection(type));
+            System.out.println();
         }
     }
 }

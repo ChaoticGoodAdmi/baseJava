@@ -34,9 +34,9 @@ public class Business {
         else
             sb.append("now");
         sb.append("\n");
-        sb.append(title).append("\n");
+        sb.append(title);
         if (description != null)
-            sb.append(description).append("\n");
+            sb.append("\n").append(description);
         return sb.toString();
     }
 }
