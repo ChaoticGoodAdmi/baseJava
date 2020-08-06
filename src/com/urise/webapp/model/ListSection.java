@@ -4,7 +4,7 @@ import java.util.List;
 
 public class ListSection<T> implements Section {
 
-    private List<T> list;
+    private final List<T> list;
 
     private ListSection(List<T> list) {
         this.list = list;

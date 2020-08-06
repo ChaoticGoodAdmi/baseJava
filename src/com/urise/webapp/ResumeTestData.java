@@ -1,7 +1,6 @@
-package com.urise.webapp.model;
+package com.urise.webapp;
 
-import org.junit.Before;
-import org.junit.Test;
+import com.urise.webapp.model.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -9,12 +8,12 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 
-public class ResumeDataTest {
+public class ResumeTestData {
 
-    private Resume resume = new Resume("John Doe");
-    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private final static Resume resume = new Resume("John Doe");
+    private final static Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
 
-    {
+    static {
         contacts.put(ContactType.PHONE_NUMBER, "+7 (999) 999 99 99");
         contacts.put(ContactType.SKYPE, "skype.profile");
         contacts.put(ContactType.EMAIL, "email@adress.com");
@@ -24,10 +23,9 @@ public class ResumeDataTest {
         contacts.put(ContactType.HOME_PAGE, "homepage.com");
     }
 
-    @Before
-    public void setUp() {
+    public static void main(String[] args) {
         for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-            resume.addContact(entry.getKey(), entry.getValue());
+            resume.setContact(entry.getKey(), entry.getValue());
         }
         resume.setSection(SectionType.PERSONAL,
                 new TextSection("text of personal qualities"));
@@ -94,18 +92,26 @@ public class ResumeDataTest {
                         ))
                 )
         );
+
+        printResume(resume);
     }
 
-    @Test
-    public void getResumeInfo() {
+    private static void printResume(Resume r) {
+        printContacts(r);
+        printSections(r);
+    }
+
+    private static void printContacts(Resume r) {
         System.out.println("Контакты: ");
         for (ContactType type : ContactType.values()) {
-            System.out.println(type.getTitle() + ": " + resume.getContact(type));
-        }
-        for (SectionType type : SectionType.values()) {
-            System.out.println(type.getTitle());
-            System.out.println(resume.getSection(type));
+            System.out.println(type.getTitle() + ": " + r.getContact(type));
         }
     }
 
+    private static void printSections(Resume r) {
+        for (SectionType type : SectionType.values()) {
+            System.out.println(type.getTitle());
+            System.out.println(r.getSection(type));
+        }
+    }
 }

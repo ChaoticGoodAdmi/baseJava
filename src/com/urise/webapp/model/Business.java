@@ -4,26 +4,22 @@ import java.time.LocalDate;
 
 public class Business {
 
-    private String companyName;
-    private Link homePage;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String title;
-    private String description;
+    private final String companyName;
+    private final Link homePage;
+    private final LocalDate startDate;
+    private final LocalDate endDate;
+    private final String title;
+    private final String description;
+
+    public Business(String companyName, Link homePage, LocalDate startDate, String title, String description) {
+        this(companyName, homePage, startDate, null, title, description);
+    }
 
     public Business(String companyName, Link homePage, LocalDate startDate, LocalDate endDate, String title, String description) {
         this.companyName = companyName;
         this.homePage = homePage;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.title = title;
-        this.description = description;
-    }
-
-    public Business(String companyName, Link homePage, LocalDate startDate, String title, String description) {
-        this.companyName = companyName;
-        this.homePage = homePage;
-        this.startDate = startDate;
         this.title = title;
         this.description = description;
     }
