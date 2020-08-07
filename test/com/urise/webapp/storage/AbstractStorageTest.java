@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
 
-    protected AbstractStorage storage;
+    protected Storage storage;
     private static final String UUID_1 = "UUID_1";
     private static final String UUID_2 = "UUID_2";
     private static final String UUID_3 = "UUID_3";
@@ -22,7 +22,7 @@ public abstract class AbstractStorageTest {
     private static final Resume R_2 = new Resume(UUID_2, "NAME_2");
     private static final Resume R_3 = new Resume(UUID_3, "NAME_3");
 
-    AbstractStorageTest(AbstractStorage storage) {
+    AbstractStorageTest(Storage storage) {
         this.storage = storage;
     }
 
@@ -82,9 +82,9 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getAllSorted() {
-        List resumes = storage.getAllSorted();
-        assertEquals(3, resumes.size());
-        assertEquals(Arrays.asList(R_1, R_2, R_3), resumes);
+        List<Resume> actualResumes = storage.getAllSorted();
+        assertEquals(3, actualResumes.size());
+        assertEquals(Arrays.asList(R_1, R_2, R_3), actualResumes);
     }
 
     @Test

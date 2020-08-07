@@ -1,6 +1,7 @@
 package com.urise.webapp.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ListSection<T> implements Section {
 
@@ -14,7 +15,7 @@ public class ListSection<T> implements Section {
         return new ListSection<>(list);
     }
 
-    public static ListSection<Business> listBusinessSection(List<Business> list) {
+    public static ListSection<Experience> listBusinessSection(List<Experience> list) {
         return new ListSection<>(list);
     }
 
@@ -30,5 +31,18 @@ public class ListSection<T> implements Section {
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ListSection<?> that = (ListSection<?>) o;
+        return list.equals(that.list);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(list);
     }
 }

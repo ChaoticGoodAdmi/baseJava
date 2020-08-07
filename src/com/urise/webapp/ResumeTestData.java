@@ -52,14 +52,14 @@ public class ResumeTestData {
         resume.setSection(SectionType.EXPERIENCE,
                 ListSection.listBusinessSection(
                         new ArrayList<>(Arrays.asList(
-                                new Business(
+                                new Experience(
                                         "Company_1",
                                         new Link("www.company1.com", "Company_1"),
                                         LocalDate.of(2013, 10, 1),
                                         "Position Title",
                                         "list of responsibilities"
                                 ),
-                                new Business(
+                                new Experience(
                                         "Company_2",
                                         new Link("www.company2.com", "Company_1"),
                                         LocalDate.of(2012, 4, 1),
@@ -73,7 +73,7 @@ public class ResumeTestData {
         resume.setSection(SectionType.EDUCATION,
                 ListSection.listBusinessSection(
                         new ArrayList<>(Arrays.asList(
-                                new Business(
+                                new Experience(
                                         "University_1",
                                         new Link("www.uni1.com", "University_1"),
                                         LocalDate.of(2013, 3, 1),
@@ -81,7 +81,7 @@ public class ResumeTestData {
                                         "Course_title",
                                         null
                                 ),
-                                new Business(
+                                new Experience(
                                         "University_2",
                                         new Link("www.uni2.com", "University_2"),
                                         LocalDate.of(2012, 4, 1),
