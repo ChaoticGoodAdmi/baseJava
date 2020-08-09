@@ -3,23 +3,23 @@ package com.urise.webapp.model;
 import java.util.List;
 import java.util.Objects;
 
-public class ListSection implements Section {
+public class CompanySection implements Section {
 
-    private final List<String> list;
+    private final List<Experience> list;
 
-    public ListSection(List<String> list) {
+    public CompanySection(List<Experience> list) {
         this.list = list;
     }
 
-    public List<String> getList() {
+    public List<Experience> getList() {
         return list;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for(String item : list) {
-            sb.append(item);
+        for(Experience item : list) {
+            sb.append(item.toString());
             sb.append("\n");
         }
         return sb.toString();
@@ -29,7 +29,7 @@ public class ListSection implements Section {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ListSection that = (ListSection) o;
+        CompanySection that = (CompanySection) o;
         return list.equals(that.list);
     }
 

@@ -32,7 +32,7 @@ public class ResumeTestData {
         resume.setSection(SectionType.OBJECTIVE,
                 new TextSection("Senior Java Developer"));
         resume.setSection(SectionType.ACHIEVEMENT,
-                ListSection.listStringSection(
+                new ListSection(
                         new ArrayList<>(Arrays.asList(
                                 "Achievement_1",
                                 "Achievement_2",
@@ -41,7 +41,7 @@ public class ResumeTestData {
                 )
         );
         resume.setSection(SectionType.QUALIFICATIONS,
-                ListSection.listStringSection(
+                new ListSection(
                         new ArrayList<>(Arrays.asList(
                                 "Qualification_1",
                                 "Qualification_2",
@@ -50,7 +50,7 @@ public class ResumeTestData {
                 )
         );
         resume.setSection(SectionType.EXPERIENCE,
-                ListSection.listBusinessSection(
+                new CompanySection(
                         new ArrayList<>(Arrays.asList(
                                 new Experience(
                                         "Company_1",
@@ -71,7 +71,7 @@ public class ResumeTestData {
                 )
         );
         resume.setSection(SectionType.EDUCATION,
-                ListSection.listBusinessSection(
+                new CompanySection(
                         new ArrayList<>(Arrays.asList(
                                 new Experience(
                                         "University_1",
