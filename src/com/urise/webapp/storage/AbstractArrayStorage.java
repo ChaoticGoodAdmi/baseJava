@@ -21,7 +21,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     @Override
     public void doSave(Resume resume, Integer searchKey) {
         if (storageSize == MAX_SIZE) {
-            throw new StorageException(resume.getUuid(), "Reached max size of a storage");
+            throw new StorageException("Reached max size of a storage", resume.getUuid());
         } else {
             insertToStorage(resume, searchKey);
             storageSize++;
