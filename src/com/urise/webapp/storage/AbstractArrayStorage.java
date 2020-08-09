@@ -9,7 +9,7 @@ import java.util.List;
 public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     protected static final int MAX_SIZE = 10000;
-    protected Resume[] storage = new Resume[MAX_SIZE];
+    protected final Resume[] storage = new Resume[MAX_SIZE];
     private int storageSize = 0;
 
     @Override
