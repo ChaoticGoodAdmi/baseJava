@@ -2,7 +2,7 @@ package com.urise.webapp;
 
 import com.urise.webapp.model.*;
 
-import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -53,41 +53,76 @@ public class ResumeTestData {
                 new CompanySection(
                         new ArrayList<>(Arrays.asList(
                                 new Experience(
-                                        "Company_1",
-                                        new Link("www.company1.com", "Company_1"),
-                                        LocalDate.of(2013, 10, 1),
-                                        "Position Title",
-                                        "list of responsibilities"
-                                ),
+                                        new Link("www.comp1.com", "Company_1"),
+                                        new ArrayList<>(Arrays.asList(
+                                                new Experience.Position(
+                                                        "Job_title_2",
+                                                        "Job_description_2",
+                                                        2010,
+                                                        Month.APRIL
+                                                ),
+                                                new Experience.Position(
+                                                        "Job_title_1",
+                                                        "Job_description_1",
+                                                        2000,
+                                                        Month.AUGUST,
+                                                        2010,
+                                                        Month.APRIL
+                                                )
+                                        ))
+                        ),
                                 new Experience(
-                                        "Company_2",
-                                        new Link("www.company2.com", "Company_1"),
-                                        LocalDate.of(2012, 4, 1),
-                                        LocalDate.of(2014, 10, 1),
-                                        "Position Title",
-                                        "list of responsibilities"
-                                )
-                        ))
+                                        new Link("www.comp2.com", "Company_2"),
+                                        new ArrayList<>(Arrays.asList(
+                                                new Experience.Position(
+                                                        "Job_title",
+                                                        "Job_description",
+                                                        1990,
+                                                        Month.JANUARY,
+                                                        2000,
+                                                        Month.AUGUST
+                                                )
+                                        ))
+                                ))
+                        )
                 )
         );
         resume.setSection(SectionType.EDUCATION,
                 new CompanySection(
                         new ArrayList<>(Arrays.asList(
                                 new Experience(
-                                        "University_1",
                                         new Link("www.uni1.com", "University_1"),
-                                        LocalDate.of(2013, 3, 1),
-                                        LocalDate.of(2013, 5, 1),
-                                        "Course_title",
-                                        null
+                                        new ArrayList<>(Arrays.asList(
+                                                new Experience.Position(
+                                                        "Course_title_1",
+                                                        null,
+                                                        1980,
+                                                        Month.SEPTEMBER,
+                                                        1985,
+                                                        Month.JULY
+                                                ),
+                                                new Experience.Position(
+                                                        "Course_title_2",
+                                                        null,
+                                                        1985,
+                                                        Month.SEPTEMBER,
+                                                        1990,
+                                                        Month.JULY
+                                                )
+                                        ))
                                 ),
                                 new Experience(
-                                        "University_2",
                                         new Link("www.uni2.com", "University_2"),
-                                        LocalDate.of(2012, 4, 1),
-                                        LocalDate.of(2014, 10, 1),
-                                        "Course_title",
-                                        null
+                                        new ArrayList<>(Arrays.asList(
+                                                new Experience.Position(
+                                                        "Course_title",
+                                                        null,
+                                                        1990,
+                                                        Month.JULY,
+                                                        1990,
+                                                        Month.AUGUST
+                                                )
+                                        ))
                                 )
                         ))
                 )
