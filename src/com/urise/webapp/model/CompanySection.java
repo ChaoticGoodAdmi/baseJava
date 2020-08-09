@@ -8,6 +8,7 @@ public class CompanySection implements Section {
     private final List<Experience> list;
 
     public CompanySection(List<Experience> list) {
+        Objects.requireNonNull(list, "company list must not be null");
         this.list = list;
     }
 
