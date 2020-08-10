@@ -8,13 +8,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class Experience {
+public class Company {
 
     private final Link homePage;
     private List<Position> positions;
 
-
-    public Experience(Link homePage, List<Position> positions) {
+    public Company(Link homePage, List<Position> positions) {
         Objects.requireNonNull(positions, "positions list must not be null");
         this.homePage = homePage;
         this.positions = positions;
@@ -35,7 +34,7 @@ public class Experience {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Experience that = (Experience) o;
+        Company that = (Company) o;
         return homePage.equals(that.homePage) &&
                 positions.equals(that.positions);
     }

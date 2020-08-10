@@ -5,21 +5,21 @@ import java.util.Objects;
 
 public class CompanySection implements Section {
 
-    private final List<Experience> list;
+    private final List<Company> list;
 
-    public CompanySection(List<Experience> list) {
+    public CompanySection(List<Company> list) {
         Objects.requireNonNull(list, "company list must not be null");
         this.list = list;
     }
 
-    public List<Experience> getList() {
+    public List<Company> getList() {
         return list;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for(Experience item : list) {
+        for(Company item : list) {
             sb.append(item.toString());
             sb.append("\n");
         }

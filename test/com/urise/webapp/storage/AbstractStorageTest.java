@@ -9,7 +9,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.urise.webapp.storage.ResumeTestData.createTestResume;
+import static com.urise.webapp.ResumeTestData.createTestResume;
 import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {

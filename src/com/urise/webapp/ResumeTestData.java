@@ -10,7 +10,6 @@ import java.util.Map;
 
 public class ResumeTestData {
 
-    private final static Resume resume = new Resume("John Doe");
     private final static Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
 
     static {
@@ -23,7 +22,8 @@ public class ResumeTestData {
         contacts.put(ContactType.HOME_PAGE, "homepage.com");
     }
 
-    public static void main(String[] args) {
+    public static Resume createTestResume(String uuid, String fullName) {
+        Resume resume = new Resume(uuid, fullName);
         for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
             resume.setContact(entry.getKey(), entry.getValue());
         }
@@ -52,16 +52,16 @@ public class ResumeTestData {
         resume.setSection(SectionType.EXPERIENCE,
                 new CompanySection(
                         new ArrayList<>(Arrays.asList(
-                                new Experience(
+                                new Company(
                                         new Link("www.comp1.com", "Company_1"),
                                         new ArrayList<>(Arrays.asList(
-                                                new Experience.Position(
+                                                new Company.Position(
                                                         "Job_title_2",
                                                         "Job_description_2",
                                                         2010,
                                                         Month.APRIL
                                                 ),
-                                                new Experience.Position(
+                                                new Company.Position(
                                                         "Job_title_1",
                                                         "Job_description_1",
                                                         2000,
@@ -70,11 +70,11 @@ public class ResumeTestData {
                                                         Month.APRIL
                                                 )
                                         ))
-                        ),
-                                new Experience(
+                                ),
+                                new Company(
                                         new Link("www.comp2.com", "Company_2"),
                                         new ArrayList<>(Arrays.asList(
-                                                new Experience.Position(
+                                                new Company.Position(
                                                         "Job_title",
                                                         "Job_description",
                                                         1990,
@@ -90,10 +90,10 @@ public class ResumeTestData {
         resume.setSection(SectionType.EDUCATION,
                 new CompanySection(
                         new ArrayList<>(Arrays.asList(
-                                new Experience(
+                                new Company(
                                         new Link("www.uni1.com", "University_1"),
                                         new ArrayList<>(Arrays.asList(
-                                                new Experience.Position(
+                                                new Company.Position(
                                                         "Course_title_1",
                                                         null,
                                                         1980,
@@ -101,7 +101,7 @@ public class ResumeTestData {
                                                         1985,
                                                         Month.JULY
                                                 ),
-                                                new Experience.Position(
+                                                new Company.Position(
                                                         "Course_title_2",
                                                         null,
                                                         1985,
@@ -111,10 +111,10 @@ public class ResumeTestData {
                                                 )
                                         ))
                                 ),
-                                new Experience(
+                                new Company(
                                         new Link("www.uni2.com", "University_2"),
                                         new ArrayList<>(Arrays.asList(
-                                                new Experience.Position(
+                                                new Company.Position(
                                                         "Course_title",
                                                         null,
                                                         1990,
@@ -127,27 +127,6 @@ public class ResumeTestData {
                         ))
                 )
         );
-
-        printResume(resume);
-    }
-
-    private static void printResume(Resume r) {
-        printContacts(r);
-        printSections(r);
-    }
-
-    private static void printContacts(Resume r) {
-        System.out.println("Контакты: ");
-        for (ContactType type : ContactType.values()) {
-            System.out.println(type.getTitle() + ": " + r.getContact(type));
-        }
-        System.out.println();
-    }
-
-    private static void printSections(Resume r) {
-        for (SectionType type : SectionType.values()) {
-            System.out.println(type.getTitle());
-            System.out.println(r.getSection(type));
-        }
+        return resume;
     }
 }

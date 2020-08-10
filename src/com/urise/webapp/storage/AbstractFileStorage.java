@@ -26,8 +26,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        if (size() > 0) {
-            File[] resumeFiles = directory.listFiles();
+        File[] resumeFiles = directory.listFiles();
+        if (resumeFiles != null) {
             for (File resumeFile : resumeFiles) {
                 doDelete(resumeFile);
             }
@@ -86,10 +86,10 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected List<Resume> getResumeList() {
         List<Resume> resumeList = new ArrayList<>();
         File[] resumeFiles = directory.listFiles();
-        if (directory == null)
+        if (resumeFiles == null)
             throw new StorageException("Directory can't be read");
         else {
-            for (File resumeFile : directory.listFiles()) {
+            for (File resumeFile : resumeFiles) {
                 resumeList.add(doGet(resumeFile));
             }
         }
