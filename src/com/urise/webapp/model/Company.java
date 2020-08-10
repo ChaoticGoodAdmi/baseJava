@@ -2,13 +2,15 @@ package com.urise.webapp.model;
 
 import com.urise.webapp.util.DateUtil;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class Company {
+public class Company implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private final Link homePage;
     private List<Position> positions;
@@ -24,7 +26,7 @@ public class Company {
         StringBuilder sb = new StringBuilder();
         sb.append(homePage).append("\n");
         Collections.sort(positions);
-        for(Position position : positions) {
+        for (Position position : positions) {
             sb.append(position.toString());
         }
         return sb.toString();
@@ -44,7 +46,8 @@ public class Company {
         return Objects.hash(homePage, positions);
     }
 
-    public static class Position implements Comparable<Position>{
+    public static class Position implements Comparable<Position>, Serializable {
+        private static final long serialVersionUID = 1L;
 
         private final String title;
         private final String description;
