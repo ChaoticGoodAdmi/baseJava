@@ -20,7 +20,7 @@ public class CompanySection implements Section {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for(Company item : list) {
+        for (Company item : list) {
             sb.append(item.toString());
             sb.append("\n");
         }

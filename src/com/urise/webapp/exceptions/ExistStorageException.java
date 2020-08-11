@@ -1,6 +1,6 @@
 package com.urise.webapp.exceptions;
 
-public class ExistStorageException extends StorageException{
+public class ExistStorageException extends StorageException {
 
     private static final long serialVersionUID = 1L;
 

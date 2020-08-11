@@ -20,7 +20,7 @@ public class ListSection implements Section {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for(String item : list) {
+        for (String item : list) {
             sb.append(item);
             sb.append("\n");
         }

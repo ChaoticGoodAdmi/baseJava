@@ -107,5 +107,4 @@ public abstract class AbstractStorageTest {
         final String UUID_NOT_THERE = "UUID_NOT_THERE";
         storage.get(UUID_NOT_THERE);
     }
-
 }
