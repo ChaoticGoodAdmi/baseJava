@@ -6,23 +6,23 @@ import com.urise.webapp.model.Resume;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
 
     private Path directory;
-    private StorageStrategy storageStrategy;
+    private SerializationStrategy serializationStrategy;
 
-    public PathStorage(String dir, StorageStrategy storageStrategy) {
+    public PathStorage(String dir, SerializationStrategy serializationStrategy) {
         Path directory = Paths.get(dir);
         Objects.requireNonNull(dir, "directory must not be null");
-        this.storageStrategy = storageStrategy;
+        this.serializationStrategy = serializationStrategy;
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(dir + " is not a directory or is not writable");
         }
@@ -31,18 +31,14 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     public void clear() {
-        try {
-            Files.list(directory).forEach(this::doDelete);
-        } catch (IOException e) {
-            throw new StorageException("Path delete error");
-        }
+        getFilesList().forEach(this::doDelete);
     }
 
     @Override
     protected void doSave(Resume resume, Path path) {
         try {
             Files.createFile(path);
-            storageStrategy.doWrite(resume, new BufferedOutputStream(Files.newOutputStream(path)));
+            doUpdate(path, resume);
         } catch (IOException e) {
             throw new StorageException("IO Error", path.getFileName().toString(), e);
         }
@@ -60,7 +56,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path path) {
         try {
-            return storageStrategy.doRead(new BufferedInputStream(Files.newInputStream(path)));
+            return serializationStrategy.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Path is not found", path.getFileName().toString(), e);
         }
@@ -69,7 +65,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected void doUpdate(Path path, Resume resume) {
         try {
-            storageStrategy.doWrite(resume, new BufferedOutputStream(Files.newOutputStream(path)));
+            serializationStrategy.doWrite(resume, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Path is not written", path.getFileName().toString(), e);
         }
@@ -77,11 +73,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     public int size() {
-        try {
-            return (int) Files.list(directory).count();
-        } catch (IOException e) {
-            throw new StorageException("Directory can't be read");
-        }
+        return (int) getFilesList().count();
     }
 
     @Override
@@ -91,20 +83,20 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> getResumeList() {
-        List<Resume> resumeList = new ArrayList<>();
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
-            for (Path path : stream) {
-                resumeList.add(doGet(path));
-            }
-        } catch (IOException e) {
-            throw new StorageException("Directory can't be read");
-        }
-        return resumeList;
+        return getFilesList().map(this::doGet).collect(Collectors.toList());
     }
 
     @Override
     protected Path findSearchKey(String uuid) {
         return directory.resolve(uuid);
+    }
+
+    private Stream<Path> getFilesList() {
+        try {
+            return Files.list(directory);
+        } catch (IOException e) {
+            throw new StorageException("Directory can't be read");
+        }
     }
 
 }

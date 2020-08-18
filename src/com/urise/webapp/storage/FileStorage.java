@@ -11,11 +11,11 @@ import java.util.Objects;
 public class FileStorage extends AbstractStorage<File> {
 
     private File directory;
-    private StorageStrategy storageStrategy;
+    private SerializationStrategy serializationStrategy;
 
-    protected FileStorage(File directory, StorageStrategy storageStrategy) {
+    protected FileStorage(File directory, SerializationStrategy serializationStrategy) {
         Objects.requireNonNull(directory, "directory must not be null");
-        this.storageStrategy = storageStrategy;
+        this.serializationStrategy = serializationStrategy;
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not a directory");
         }
@@ -27,11 +27,9 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        File[] resumeFiles = directory.listFiles();
-        if (resumeFiles != null) {
-            for (File resumeFile : resumeFiles) {
-                doDelete(resumeFile);
-            }
+        File[] resumeFiles = getFilesList();
+        for (File resumeFile : resumeFiles) {
+            doDelete(resumeFile);
         }
     }
 
@@ -39,7 +37,7 @@ public class FileStorage extends AbstractStorage<File> {
     protected void doSave(Resume resume, File file) {
         try {
             file.createNewFile();
-            storageStrategy.doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
+            doUpdate(file, resume);
         } catch (IOException e) {
             throw new StorageException("IO Error", file.getAbsolutePath(), e);
         }
@@ -47,14 +45,15 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doDelete(File file) {
-        if (!file.delete())
+        if (!file.delete()) {
             throw new StorageException("File is not deleted");
+        }
     }
 
     @Override
     protected Resume doGet(File file) {
         try {
-            return storageStrategy.doRead(new BufferedInputStream(new FileInputStream(file)));
+            return serializationStrategy.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("File is not found", file.getAbsolutePath(), e);
         }
@@ -63,7 +62,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected void doUpdate(File file, Resume resume) {
         try {
-            storageStrategy.doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
+            serializationStrategy.doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
             throw new StorageException("File is not written", file.getAbsolutePath(), e);
         }
@@ -71,11 +70,8 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public int size() {
-        String[] resumeFiles = directory.list();
-        if (resumeFiles == null)
-            throw new StorageException("Directory can't be read");
-        else
-            return resumeFiles.length;
+        File[] resumeFiles = getFilesList();
+        return resumeFiles.length;
     }
 
     @Override
@@ -86,13 +82,9 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected List<Resume> getResumeList() {
         List<Resume> resumeList = new ArrayList<>();
-        File[] resumeFiles = directory.listFiles();
-        if (resumeFiles == null)
-            throw new StorageException("Directory can't be read");
-        else {
-            for (File resumeFile : resumeFiles) {
-                resumeList.add(doGet(resumeFile));
-            }
+        File[] resumeFiles = getFilesList();
+        for (File resumeFile : resumeFiles) {
+            resumeList.add(doGet(resumeFile));
         }
         return resumeList;
     }
@@ -100,6 +92,14 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected File findSearchKey(String uuid) {
         return new File(directory, uuid);
+    }
+
+    private File[] getFilesList() {
+        File[] resumeFiles = directory.listFiles();
+        if (resumeFiles == null) {
+            throw new StorageException("Directory can't be read");
+        }
+        return resumeFiles;
     }
 
 }
