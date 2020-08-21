@@ -2,6 +2,7 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exceptions.StorageException;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.serialization.SerializationStrategy;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -27,8 +28,7 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        File[] resumeFiles = getFilesList();
-        for (File resumeFile : resumeFiles) {
+        for (File resumeFile : getFilesList()) {
             doDelete(resumeFile);
         }
     }
@@ -70,8 +70,7 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public int size() {
-        File[] resumeFiles = getFilesList();
-        return resumeFiles.length;
+        return getFilesList().length;
     }
 
     @Override
@@ -82,8 +81,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected List<Resume> getResumeList() {
         List<Resume> resumeList = new ArrayList<>();
-        File[] resumeFiles = getFilesList();
-        for (File resumeFile : resumeFiles) {
+        for (File resumeFile : getFilesList()) {
             resumeList.add(doGet(resumeFile));
         }
         return resumeList;
