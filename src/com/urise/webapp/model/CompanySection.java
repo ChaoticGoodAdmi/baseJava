@@ -3,10 +3,13 @@ package com.urise.webapp.model;
 import java.util.List;
 import java.util.Objects;
 
-public class CompanySection implements Section {
+public class CompanySection extends Section {
     private static final long serialVersionUID = 1L;
 
-    private final List<Company> list;
+    private List<Company> list;
+
+    public CompanySection() {
+    }
 
     public CompanySection(List<Company> list) {
         Objects.requireNonNull(list, "company list must not be null");

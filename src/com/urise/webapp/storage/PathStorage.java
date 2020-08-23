@@ -41,7 +41,7 @@ public class PathStorage extends AbstractStorage<Path> {
             Files.createFile(path);
             doUpdate(path, resume);
         } catch (IOException e) {
-            throw new StorageException("IO Error", path.getFileName().toString(), e);
+            throw new StorageException("Couldn't create path " + path, getFileName(path), e);
         }
     }
 
@@ -50,7 +50,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             Files.delete(path);
         } catch (IOException e) {
-            throw new StorageException("Path is not deleted", path.getFileName().toString(), e);
+            throw new StorageException("Path is not deleted", getFileName(path), e);
         }
     }
 
@@ -59,7 +59,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             return serializationStrategy.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
-            throw new StorageException("Path is not found", path.getFileName().toString(), e);
+            throw new StorageException("Path is not found", getFileName(path), e);
         }
     }
 
@@ -68,7 +68,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             serializationStrategy.doWrite(resume, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
-            throw new StorageException("Path is not written", path.getFileName().toString(), e);
+            throw new StorageException("Path is not written", getFileName(path), e);
         }
     }
 
@@ -79,7 +79,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected boolean isFound(Path path) {
-        return Files.exists(path);
+        return Files.isRegularFile(path);
     }
 
     @Override
@@ -96,8 +96,11 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             return Files.list(directory);
         } catch (IOException e) {
-            throw new StorageException("Directory can't be read");
+            throw new StorageException("Directory can't be read", e);
         }
     }
 
+    private String getFileName(Path path) {
+        return path.getFileName().toString();
+    }
 }
