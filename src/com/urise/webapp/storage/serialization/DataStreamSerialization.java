@@ -17,7 +17,7 @@ public class DataStreamSerialization implements SerializationStrategy {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
             Map<ContactType, String> contacts = resume.getContacts();
-            writeMap(contacts, dos);
+            writeContacts(contacts, dos);
             Map<SectionType, Section> sections = resume.getSections();
             writeSections(sections, dos);
         }
@@ -37,11 +37,11 @@ public class DataStreamSerialization implements SerializationStrategy {
         }
     }
 
-    private <K, V> void writeMap(Map<K, V> map, DataOutputStream dos) throws IOException {
+    private void writeContacts(Map<ContactType, String> map, DataOutputStream dos) throws IOException {
         dos.writeInt(map.size());
-        for (Map.Entry<K, V> entry : map.entrySet()) {
-            dos.writeUTF(entry.getKey().toString());
-            dos.writeUTF(entry.getValue().toString());
+        for (Map.Entry<ContactType, String> entry : map.entrySet()) {
+            dos.writeUTF(entry.getKey().name());
+            dos.writeUTF(entry.getValue());
         }
     }
 
@@ -91,7 +91,7 @@ public class DataStreamSerialization implements SerializationStrategy {
         switch (sectionType) {
             case PERSONAL:
             case OBJECTIVE:
-                dos.writeUTF(section.toString());
+                dos.writeUTF(((TextSection) section).getText());
                 break;
             case ACHIEVEMENT:
             case QUALIFICATIONS:
@@ -106,10 +106,10 @@ public class DataStreamSerialization implements SerializationStrategy {
         }
     }
 
-    private <E> void writeList(List<E> list, DataOutputStream dos) throws IOException {
+    private void writeList(List<String> list, DataOutputStream dos) throws IOException {
         dos.writeInt(list.size());
-        for (E element : list) {
-            dos.writeUTF(element.toString());
+        for (String element : list) {
+            dos.writeUTF(element);
         }
     }
 
