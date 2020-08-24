@@ -3,7 +3,11 @@ package com.urise.webapp.storage.serialization;
 import com.urise.webapp.model.*;
 
 import java.io.*;
-import java.util.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 public class DataStreamSerialization implements SerializationStrategy {
 
@@ -41,23 +45,23 @@ public class DataStreamSerialization implements SerializationStrategy {
         }
     }
 
-    private <K, V> Map<K, V> readMap(DataInputStream dis) throws IOException {
+    private Map<ContactType, String> readMap(DataInputStream dis) throws IOException {
         int size = dis.readInt();
-        Map<K, V> map = new HashMap<>();
+        Map<ContactType, String> map = new EnumMap<>(ContactType.class);
         for (int i = 0; i < size; i++) {
-            map.put((K) dis.readUTF(), (V) dis.readUTF());
+            map.put(ContactType.valueOf(dis.readUTF()), dis.readUTF());
         }
         return map;
     }
 
     private void writeSections(Map<SectionType, Section> sections, DataOutputStream dos) throws IOException {
         dos.writeInt(sections.size());
-        for(Map.Entry<SectionType, Section> entry : sections.entrySet()) {
+        for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
             writeSection(entry.getKey(), entry.getValue(), dos);
         }
     }
 
-    private  Map<SectionType, Section> readSections(DataInputStream dis) throws IOException {
+    private Map<SectionType, Section> readSections(DataInputStream dis) throws IOException {
         Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
         int size = dis.readInt();
         for (int i = 0; i < size; i++) {
@@ -74,7 +78,7 @@ public class DataStreamSerialization implements SerializationStrategy {
                     break;
                 case "EDUCATION":
                 case "EXPERIENCE":
-                    List<Company> companies = readList(dis);
+                    List<Company> companies = readCompanies(dis);
                     sections.put(SectionType.valueOf(sectionType), new CompanySection(companies));
                     break;
             }
@@ -97,7 +101,7 @@ public class DataStreamSerialization implements SerializationStrategy {
             case EDUCATION:
             case EXPERIENCE:
                 CompanySection companySection = (CompanySection) section;
-                writeList(companySection.getList(), dos);
+                writeCompanies(companySection.getList(), dos);
                 break;
         }
     }
@@ -109,12 +113,89 @@ public class DataStreamSerialization implements SerializationStrategy {
         }
     }
 
-    private <E> List<E> readList(DataInputStream dis) throws IOException {
+    private List<String> readList(DataInputStream dis) throws IOException {
         int size = dis.readInt();
-        List<E> list = new ArrayList<>();
+        List<String> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            list.add((E) dis.readUTF());
+            list.add(dis.readUTF());
         }
         return list;
     }
+
+    private void writeCompanies(List<Company> companies, DataOutputStream dos) throws IOException {
+        dos.writeInt(companies.size());
+        for (Company company : companies) {
+            writeCompany(company, dos);
+        }
+    }
+
+    private List<Company> readCompanies(DataInputStream dis) throws IOException {
+        List<Company> companies = new ArrayList<>();
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            companies.add(readCompany(dis));
+        }
+        return companies;
+    }
+
+    private void writeCompany(Company company, DataOutputStream dos) throws IOException {
+        writeLink(company.getHomePage(), dos);
+        writePositions(company.getPositions(), dos);
+    }
+
+    private Company readCompany(DataInputStream dis) throws IOException {
+        return new Company(readLink(dis), readPositions(dis));
+    }
+
+    private void writePositions(List<Company.Position> positions, DataOutputStream dos) throws IOException {
+        dos.writeInt(positions.size());
+        for (Company.Position position : positions) {
+            writePosition(position, dos);
+        }
+    }
+
+    private List<Company.Position> readPositions(DataInputStream dis) throws IOException {
+        List<Company.Position> positions = new ArrayList<>();
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            positions.add(readPosition(dis));
+        }
+        return positions;
+    }
+
+    private void writePosition(Company.Position position, DataOutputStream dos) throws IOException {
+        dos.writeUTF(position.getTitle());
+        dos.writeUTF(position.getDescription());
+        writeLocalDate(position.getStartDate(), dos);
+        writeLocalDate(position.getEndDate(), dos);
+    }
+
+    private Company.Position readPosition(DataInputStream dis) throws IOException {
+        String title = dis.readUTF();
+        String desc = dis.readUTF();
+        LocalDate startDate = readLocalDate(dis);
+        LocalDate endDate = readLocalDate(dis);
+        return new Company.Position(title, desc,
+                startDate.getYear(), startDate.getMonth(),
+                endDate.getYear(), endDate.getMonth());
+    }
+
+    private void writeLocalDate(LocalDate date, DataOutputStream dos) throws IOException {
+        dos.writeInt(date.getYear());
+        dos.writeInt(date.getMonth().getValue());
+    }
+
+    private LocalDate readLocalDate(DataInputStream dis) throws IOException {
+        return LocalDate.of(dis.readInt(), dis.readInt(), 1);
+    }
+
+    private void writeLink(Link link, DataOutputStream dos) throws IOException {
+        dos.writeUTF(link.getUrl());
+        dos.writeUTF(link.getName());
+    }
+
+    private Link readLink(DataInputStream dis) throws IOException {
+        return new Link(dis.readUTF(), dis.readUTF());
+    }
+
 }
