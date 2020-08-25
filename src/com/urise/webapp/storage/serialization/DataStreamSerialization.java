@@ -50,6 +50,10 @@ public class DataStreamSerialization implements SerializationStrategy {
         void read() throws IOException;
     }
 
+    public interface ItemLister<I> {
+        I list() throws IOException;
+    }
+
     private <I> void writeCollection(Collection<I> collection, DataOutputStream dos, ItemWriter<I> writer) throws IOException {
         dos.writeInt(collection.size());
         for (I item : collection) {
@@ -62,6 +66,15 @@ public class DataStreamSerialization implements SerializationStrategy {
         for (int i = 0; i < size; i++) {
             reader.read();
         }
+    }
+
+    private <I> List<I> listItems(DataInputStream dis, ItemLister<I> lister) throws IOException {
+        int size = dis.readInt();
+        List<I> list = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            list.add(lister.list());
+        }
+        return list;
     }
 
     private void writeSection(DataOutputStream dos, Map.Entry<SectionType, Section> entry) throws IOException {
@@ -91,11 +104,7 @@ public class DataStreamSerialization implements SerializationStrategy {
                 return new TextSection(dis.readUTF());
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                int size = dis.readInt();
-                List<String> list = new ArrayList<>(size);
-                for (int i = 0; i < size; i++) {
-                    list.add(dis.readUTF());
-                }
+                List<String> list = listItems(dis, dis::readUTF);
                 return new ListSection(list);
             case EDUCATION:
             case EXPERIENCE:
@@ -106,12 +115,7 @@ public class DataStreamSerialization implements SerializationStrategy {
     }
 
     private List<Company> readCompanies(DataInputStream dis) throws IOException {
-        List<Company> companies = new ArrayList<>();
-        int size = dis.readInt();
-        for (int i = 0; i < size; i++) {
-            companies.add(readCompany(dis));
-        }
-        return companies;
+        return listItems(dis, () -> readCompany(dis));
     }
 
     private void writeCompany(Company company, DataOutputStream dos) throws IOException {
@@ -131,12 +135,7 @@ public class DataStreamSerialization implements SerializationStrategy {
     }
 
     private List<Company.Position> readPositions(DataInputStream dis) throws IOException {
-        List<Company.Position> positions = new ArrayList<>();
-        int size = dis.readInt();
-        for (int i = 0; i < size; i++) {
-            positions.add(readPosition(dis));
-        }
-        return positions;
+        return listItems(dis, () -> readPosition(dis));
     }
 
     private void writePosition(Company.Position position, DataOutputStream dos) throws IOException {
