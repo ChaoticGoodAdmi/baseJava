@@ -4,10 +4,7 @@ import com.urise.webapp.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DataStreamSerialization implements SerializationStrategy {
 
@@ -17,9 +14,30 @@ public class DataStreamSerialization implements SerializationStrategy {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
             Map<ContactType, String> contacts = resume.getContacts();
-            writeContacts(contacts, dos);
+            writeCollection(contacts.entrySet(), dos, entry -> {
+                dos.writeUTF(entry.getKey().name());
+                dos.writeUTF(entry.getValue());
+            });
             Map<SectionType, Section> sections = resume.getSections();
-            writeSections(sections, dos);
+            writeCollection(sections.entrySet(), dos, entry -> {
+                SectionType sectionType = entry.getKey();
+                Section section = entry.getValue();
+                dos.writeUTF(sectionType.name());
+                switch (sectionType) {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        dos.writeUTF(((TextSection) section).getText());
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        writeCollection(((ListSection) section).getList(), dos, dos::writeUTF);
+                        break;
+                    case EDUCATION:
+                    case EXPERIENCE:
+                        writeCollection(((CompanySection) section).getList(), dos, company -> writeCompany(company, dos));
+                        break;
+                }
+            });
         }
     }
 
@@ -37,13 +55,17 @@ public class DataStreamSerialization implements SerializationStrategy {
         }
     }
 
-    private void writeContacts(Map<ContactType, String> map, DataOutputStream dos) throws IOException {
-        dos.writeInt(map.size());
-        for (Map.Entry<ContactType, String> entry : map.entrySet()) {
-            dos.writeUTF(entry.getKey().name());
-            dos.writeUTF(entry.getValue());
+    private interface ItemWriter<I> {
+        void write(I i) throws IOException;
+    }
+
+    private <I> void writeCollection(Collection<I> collection, DataOutputStream dos, ItemWriter<I> writer) throws IOException {
+        dos.writeInt(collection.size());
+        for (I item : collection) {
+            writer.write(item);
         }
     }
+
 
     private Map<ContactType, String> readMap(DataInputStream dis) throws IOException {
         int size = dis.readInt();
@@ -52,13 +74,6 @@ public class DataStreamSerialization implements SerializationStrategy {
             map.put(ContactType.valueOf(dis.readUTF()), dis.readUTF());
         }
         return map;
-    }
-
-    private void writeSections(Map<SectionType, Section> sections, DataOutputStream dos) throws IOException {
-        dos.writeInt(sections.size());
-        for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
-            writeSection(entry.getKey(), entry.getValue(), dos);
-        }
     }
 
     private Map<SectionType, Section> readSections(DataInputStream dis) throws IOException {
@@ -86,33 +101,6 @@ public class DataStreamSerialization implements SerializationStrategy {
         return sections;
     }
 
-    private void writeSection(SectionType sectionType, Section section, DataOutputStream dos) throws IOException {
-        dos.writeUTF(sectionType.name());
-        switch (sectionType) {
-            case PERSONAL:
-            case OBJECTIVE:
-                dos.writeUTF(((TextSection) section).getText());
-                break;
-            case ACHIEVEMENT:
-            case QUALIFICATIONS:
-                ListSection listSection = (ListSection) section;
-                writeList(listSection.getList(), dos);
-                break;
-            case EDUCATION:
-            case EXPERIENCE:
-                CompanySection companySection = (CompanySection) section;
-                writeCompanies(companySection.getList(), dos);
-                break;
-        }
-    }
-
-    private void writeList(List<String> list, DataOutputStream dos) throws IOException {
-        dos.writeInt(list.size());
-        for (String element : list) {
-            dos.writeUTF(element);
-        }
-    }
-
     private List<String> readList(DataInputStream dis) throws IOException {
         int size = dis.readInt();
         List<String> list = new ArrayList<>();
@@ -120,13 +108,6 @@ public class DataStreamSerialization implements SerializationStrategy {
             list.add(dis.readUTF());
         }
         return list;
-    }
-
-    private void writeCompanies(List<Company> companies, DataOutputStream dos) throws IOException {
-        dos.writeInt(companies.size());
-        for (Company company : companies) {
-            writeCompany(company, dos);
-        }
     }
 
     private List<Company> readCompanies(DataInputStream dis) throws IOException {
