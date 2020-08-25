@@ -1,10 +1,14 @@
 package com.urise.webapp.storage.serialization;
 
+import com.urise.webapp.exceptions.StorageException;
 import com.urise.webapp.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class DataStreamSerialization implements SerializationStrategy {
 
@@ -19,25 +23,7 @@ public class DataStreamSerialization implements SerializationStrategy {
                 dos.writeUTF(entry.getValue());
             });
             Map<SectionType, Section> sections = resume.getSections();
-            writeCollection(sections.entrySet(), dos, entry -> {
-                SectionType sectionType = entry.getKey();
-                Section section = entry.getValue();
-                dos.writeUTF(sectionType.name());
-                switch (sectionType) {
-                    case PERSONAL:
-                    case OBJECTIVE:
-                        dos.writeUTF(((TextSection) section).getText());
-                        break;
-                    case ACHIEVEMENT:
-                    case QUALIFICATIONS:
-                        writeCollection(((ListSection) section).getList(), dos, dos::writeUTF);
-                        break;
-                    case EDUCATION:
-                    case EXPERIENCE:
-                        writeCollection(((CompanySection) section).getList(), dos, company -> writeCompany(company, dos));
-                        break;
-                }
-            });
+            writeCollection(sections.entrySet(), dos, entry -> writeSection(dos, entry));
         }
     }
 
@@ -47,16 +33,21 @@ public class DataStreamSerialization implements SerializationStrategy {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            Map<ContactType, String> contacts = readMap(dis);
-            resume.setContacts(contacts);
-            Map<SectionType, Section> sections = readSections(dis);
-            resume.setSections(sections);
+            readItems(dis, () -> resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            readItems(dis, () -> {
+                SectionType sectionType = SectionType.valueOf(dis.readUTF());
+                resume.setSection(sectionType, readSection(dis, sectionType));
+            });
             return resume;
         }
     }
 
     private interface ItemWriter<I> {
         void write(I i) throws IOException;
+    }
+
+    private interface ItemReader {
+        void read() throws IOException;
     }
 
     private <I> void writeCollection(Collection<I> collection, DataOutputStream dos, ItemWriter<I> writer) throws IOException {
@@ -66,48 +57,52 @@ public class DataStreamSerialization implements SerializationStrategy {
         }
     }
 
-
-    private Map<ContactType, String> readMap(DataInputStream dis) throws IOException {
+    private void readItems(DataInputStream dis, ItemReader reader) throws IOException {
         int size = dis.readInt();
-        Map<ContactType, String> map = new EnumMap<>(ContactType.class);
         for (int i = 0; i < size; i++) {
-            map.put(ContactType.valueOf(dis.readUTF()), dis.readUTF());
+            reader.read();
         }
-        return map;
     }
 
-    private Map<SectionType, Section> readSections(DataInputStream dis) throws IOException {
-        Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
-        int size = dis.readInt();
-        for (int i = 0; i < size; i++) {
-            String sectionType = dis.readUTF();
-            switch (sectionType) {
-                case "PERSONAL":
-                case "OBJECTIVE":
-                    sections.put(SectionType.valueOf(sectionType), new TextSection(dis.readUTF()));
-                    break;
-                case "ACHIEVEMENT":
-                case "QUALIFICATIONS":
-                    List<String> list = readList(dis);
-                    sections.put(SectionType.valueOf(sectionType), new ListSection(list));
-                    break;
-                case "EDUCATION":
-                case "EXPERIENCE":
-                    List<Company> companies = readCompanies(dis);
-                    sections.put(SectionType.valueOf(sectionType), new CompanySection(companies));
-                    break;
-            }
+    private void writeSection(DataOutputStream dos, Map.Entry<SectionType, Section> entry) throws IOException {
+        SectionType sectionType = entry.getKey();
+        Section section = entry.getValue();
+        dos.writeUTF(sectionType.name());
+        switch (sectionType) {
+            case PERSONAL:
+            case OBJECTIVE:
+                dos.writeUTF(((TextSection) section).getText());
+                break;
+            case ACHIEVEMENT:
+            case QUALIFICATIONS:
+                writeCollection(((ListSection) section).getList(), dos, dos::writeUTF);
+                break;
+            case EDUCATION:
+            case EXPERIENCE:
+                writeCollection(((CompanySection) section).getList(), dos, company -> writeCompany(company, dos));
+                break;
         }
-        return sections;
     }
 
-    private List<String> readList(DataInputStream dis) throws IOException {
-        int size = dis.readInt();
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            list.add(dis.readUTF());
+    private Section readSection(DataInputStream dis, SectionType sectionType) throws IOException {
+        switch (sectionType) {
+            case PERSONAL:
+            case OBJECTIVE:
+                return new TextSection(dis.readUTF());
+            case ACHIEVEMENT:
+            case QUALIFICATIONS:
+                int size = dis.readInt();
+                List<String> list = new ArrayList<>(size);
+                for (int i = 0; i < size; i++) {
+                    list.add(dis.readUTF());
+                }
+                return new ListSection(list);
+            case EDUCATION:
+            case EXPERIENCE:
+                return new CompanySection(readCompanies(dis));
+            default:
+                throw new StorageException("No such ContactType");
         }
-        return list;
     }
 
     private List<Company> readCompanies(DataInputStream dis) throws IOException {
