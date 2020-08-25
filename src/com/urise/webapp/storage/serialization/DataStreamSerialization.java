@@ -5,10 +5,7 @@ import com.urise.webapp.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DataStreamSerialization implements SerializationStrategy {
 
@@ -140,14 +137,14 @@ public class DataStreamSerialization implements SerializationStrategy {
 
     private void writePosition(Company.Position position, DataOutputStream dos) throws IOException {
         dos.writeUTF(position.getTitle());
-        dos.writeUTF(position.getDescription());
+        writeItemNullable(position.getDescription(), dos);
         writeLocalDate(position.getStartDate(), dos);
         writeLocalDate(position.getEndDate(), dos);
     }
 
     private Company.Position readPosition(DataInputStream dis) throws IOException {
         String title = dis.readUTF();
-        String desc = dis.readUTF();
+        String desc = readItemNullable(dis);
         LocalDate startDate = readLocalDate(dis);
         LocalDate endDate = readLocalDate(dis);
         return new Company.Position(title, desc,
@@ -165,12 +162,23 @@ public class DataStreamSerialization implements SerializationStrategy {
     }
 
     private void writeLink(Link link, DataOutputStream dos) throws IOException {
-        dos.writeUTF(link.getUrl());
+        writeItemNullable(link.getUrl(), dos);
         dos.writeUTF(link.getName());
     }
 
     private Link readLink(DataInputStream dis) throws IOException {
-        return new Link(dis.readUTF(), dis.readUTF());
+        return new Link(readItemNullable(dis), dis.readUTF());
     }
 
+    private void writeItemNullable(String item, DataOutputStream dos) throws IOException {
+        dos.writeUTF(Objects.requireNonNullElse(item, ""));
+    }
+
+    private String readItemNullable(DataInputStream dis) throws IOException {
+        String line = dis.readUTF();
+        if (line.equals("")) {
+            return null;
+        }
+        return line;
+    }
 }

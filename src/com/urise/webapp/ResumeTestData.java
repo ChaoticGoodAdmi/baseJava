@@ -72,7 +72,7 @@ public class ResumeTestData {
                                         ))
                                 ),
                                 new Company(
-                                        new Link("www.comp2.com", "Company_2"),
+                                        new Link(null, "Company_2"),
                                         new ArrayList<>(Arrays.asList(
                                                 new Company.Position(
                                                         "Job_title",
@@ -95,7 +95,7 @@ public class ResumeTestData {
                                         new ArrayList<>(Arrays.asList(
                                                 new Company.Position(
                                                         "Course_title_1",
-                                                        "",
+                                                        null,
                                                         1980,
                                                         Month.SEPTEMBER,
                                                         1985,
@@ -103,7 +103,7 @@ public class ResumeTestData {
                                                 ),
                                                 new Company.Position(
                                                         "Course_title_2",
-                                                        "",
+                                                        null,
                                                         1985,
                                                         Month.SEPTEMBER,
                                                         1990,
@@ -116,7 +116,7 @@ public class ResumeTestData {
                                         new ArrayList<>(Arrays.asList(
                                                 new Company.Position(
                                                         "Course_title",
-                                                        "",
+                                                        null,
                                                         1990,
                                                         Month.JULY,
                                                         1990,
