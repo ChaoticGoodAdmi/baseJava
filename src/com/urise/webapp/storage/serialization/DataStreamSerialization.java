@@ -125,10 +125,7 @@ public class DataStreamSerialization implements SerializationStrategy {
     }
 
     private void writePositions(List<Company.Position> positions, DataOutputStream dos) throws IOException {
-        dos.writeInt(positions.size());
-        for (Company.Position position : positions) {
-            writePosition(position, dos);
-        }
+        writeCollection(positions, dos, entry -> writePosition(entry, dos));
     }
 
     private List<Company.Position> readPositions(DataInputStream dis) throws IOException {
@@ -176,9 +173,6 @@ public class DataStreamSerialization implements SerializationStrategy {
 
     private String readItemNullable(DataInputStream dis) throws IOException {
         String line = dis.readUTF();
-        if (line.equals("")) {
-            return null;
-        }
-        return line;
+        return line.equals("") ? null : line;
     }
 }
