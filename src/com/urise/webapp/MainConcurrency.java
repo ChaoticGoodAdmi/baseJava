@@ -15,7 +15,7 @@ public class MainConcurrency {
 
     private static void deadlock() {
         lock(STORAGE_2, STORAGE_1);
-        lock(STORAGE_1,  STORAGE_2);
+        lock(STORAGE_1, STORAGE_2);
     }
 
     private static void lock(Storage storage1, Storage storage2) {
@@ -29,9 +29,7 @@ public class MainConcurrency {
                 }
                 synchronized (storage1) {
                     System.out.println(Thread.currentThread().getName() + " has locked resource: " + storage2.hashCode());
-                    for (int i = 0; i < 10; i++) {
-                        storage1.save(new Resume(Integer.toString(i)));
-                    }
+                    storage1.save(new Resume());
                 }
             }
         }).start();
