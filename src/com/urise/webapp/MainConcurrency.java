@@ -6,43 +6,31 @@ import com.urise.webapp.storage.Storage;
 
 public class MainConcurrency {
 
-    public static final Storage STORAGE_1 = new ListStorage();
-    public static final Storage STORAGE_2 = new ListStorage();
+    private static final Storage STORAGE_1 = new ListStorage();
+    private static final Storage STORAGE_2 = new ListStorage();
 
     public static void main(String[] args) {
         deadlock();
     }
 
     private static void deadlock() {
-        new Thread(() -> {
-            synchronized (STORAGE_2) {
-                System.out.println(Thread.currentThread().getName() + " has locked STORAGE_2");
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                synchronized (STORAGE_1) {
-                    System.out.println(Thread.currentThread().getName() + " has locked STORAGE_1");
-                    for (int i = 0; i < 10; i++) {
-                        STORAGE_1.save(new Resume(Integer.toString(i)));
-                    }
-                }
-            }
-        }).start();
+        lock(STORAGE_2, STORAGE_1);
+        lock(STORAGE_1,  STORAGE_2);
+    }
 
+    private static void lock(Storage storage1, Storage storage2) {
         new Thread(() -> {
-            synchronized (STORAGE_1) {
-                System.out.println(Thread.currentThread().getName() + " has locked STORAGE_1");
+            synchronized (storage2) {
+                System.out.println(Thread.currentThread().getName() + " has locked resource: " + storage1.hashCode());
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                synchronized (STORAGE_2) {
-                    System.out.println(Thread.currentThread().getName() + " has locked STORAGE_2");
+                synchronized (storage1) {
+                    System.out.println(Thread.currentThread().getName() + " has locked resource: " + storage2.hashCode());
                     for (int i = 0; i < 10; i++) {
-                        STORAGE_2.save(new Resume(Integer.toString(i)));
+                        storage1.save(new Resume(Integer.toString(i)));
                     }
                 }
             }
