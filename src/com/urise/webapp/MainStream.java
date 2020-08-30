@@ -1,6 +1,5 @@
 package com.urise.webapp;
 
-import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -26,10 +25,7 @@ public class MainStream {
         return Arrays.stream(values)
                 .distinct()
                 .sorted()
-                .mapToObj(BigInteger::valueOf)
-                .reduce((a, b) -> a.multiply(BigInteger.TEN).add(b))
-                .orElse(BigInteger.ZERO)
-                .intValue();
+                .reduce(0, (a, b) -> a * 10 + b);
     }
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
