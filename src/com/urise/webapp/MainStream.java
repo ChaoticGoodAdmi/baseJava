@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class MainStream {
 
@@ -33,11 +32,10 @@ public class MainStream {
     private static List<Integer> oddOrEven(List<Integer> integers) {
         Integer sum = integers.stream().reduce(0, Integer::sum);
         Predicate<Integer> isEven = i -> i % 2 == 0;
-        Stream<Integer> integerStream = integers.stream();
-        if (isEven.test(sum)) return integerStream
+        if (isEven.test(sum)) return integers.stream()
                 .filter(Predicate.not(isEven))
                 .collect(Collectors.toList());
-        return integerStream
+        return integers.stream()
                 .filter(isEven)
                 .collect(Collectors.toList());
     }
