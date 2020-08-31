@@ -1,10 +1,8 @@
 package com.urise.webapp;
 
-import com.urise.webapp.model.*;
+import com.urise.webapp.model.ContactType;
+import com.urise.webapp.model.Resume;
 
-import java.time.Month;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -24,7 +22,7 @@ public class ResumeTestData {
 
     public static Resume createTestResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
-        for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+        /*for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
             resume.setContact(entry.getKey(), entry.getValue());
         }
         resume.setSection(SectionType.PERSONAL,
@@ -126,7 +124,7 @@ public class ResumeTestData {
                                 )
                         ))
                 )
-        );
+        );*/
         return resume;
     }
 }

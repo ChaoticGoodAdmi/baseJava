@@ -1,5 +1,6 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.Config;
 import com.urise.webapp.exceptions.ExistStorageException;
 import com.urise.webapp.exceptions.NotExistStorageException;
 import com.urise.webapp.model.Resume;
@@ -15,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
 
-    protected static final File STORAGE_DIR = new File(".\\storage");
+    protected static final File STORAGE_DIR = Config.get().getStorageDir();
 
     protected final Storage storage;
     private static final String UUID_1 = "UUID_1";
@@ -89,6 +90,13 @@ public abstract class AbstractStorageTest {
         List<Resume> actualResumes = storage.getAllSorted();
         assertEquals(3, actualResumes.size());
         assertEquals(actualResumes, Arrays.asList(R_1, R_2, R_3));
+    }
+
+    @Test
+    public void getAllSortedFromEmptyStorage() {
+        storage.clear();
+        List<Resume> actualResumes = storage.getAllSorted();
+        assertEquals(0, actualResumes.size());
     }
 
     @Test
