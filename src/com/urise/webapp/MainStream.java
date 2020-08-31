@@ -32,11 +32,8 @@ public class MainStream {
     private static List<Integer> oddOrEven(List<Integer> integers) {
         Integer sum = integers.stream().reduce(0, Integer::sum);
         Predicate<Integer> isEven = i -> i % 2 == 0;
-        if (isEven.test(sum)) return integers.stream()
-                .filter(Predicate.not(isEven))
-                .collect(Collectors.toList());
         return integers.stream()
-                .filter(isEven)
+                .filter(isEven.test(sum) ? Predicate.not(isEven) : isEven)
                 .collect(Collectors.toList());
     }
 }
