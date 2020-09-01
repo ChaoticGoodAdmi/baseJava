@@ -11,7 +11,7 @@ public class Config {
     private static final File PROPS = new File("config\\resumes.properties");
     private static final Config INSTANCE = new Config();
 
-    private Properties props = new Properties();
+    private final Properties props = new Properties();
     private File storageDir;
     private String dbUrl;
     private String dbUser;
