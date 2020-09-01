@@ -20,7 +20,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void clear() {
-        sqlHelper.execute("DELETE FROM resume",
+        sqlHelper.executeReturnable("DELETE FROM resume",
                 PreparedStatement::execute);
     }
 
@@ -32,7 +32,6 @@ public class SqlStorage implements Storage {
                     ps.setString(1, r.getUuid());
                     ps.setString(2, r.getFullName());
                     ps.execute();
-                    return true;
                 }
         );
     }
@@ -46,13 +45,12 @@ public class SqlStorage implements Storage {
                     if (!ps.execute()) {
                         throw new NotExistStorageException(uuid);
                     }
-                    return true;
                 });
     }
 
     @Override
     public Resume get(String uuid) {
-        return sqlHelper.execute(
+        return sqlHelper.executeReturnable(
                 "SELECT * FROM resume r WHERE r.uuid = ?",
                 ps -> {
                     ps.setString(1, uuid);
@@ -67,7 +65,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.execute(
+        return sqlHelper.executeReturnable(
                 "SELECT * FROM resume ORDER BY full_name",
                 ps -> {
                     ResultSet rs = ps.executeQuery();
@@ -90,14 +88,13 @@ public class SqlStorage implements Storage {
                     if (ps.executeUpdate() == 0) {
                         throw new NotExistStorageException(r.getUuid());
                     }
-                    return true;
                 }
         );
     }
 
     @Override
     public int size() {
-        return sqlHelper.execute(
+        return sqlHelper.executeReturnable(
                 "SELECT COUNT(uuid) FROM resume",
                 ps -> {
                     ResultSet rs = ps.executeQuery();
