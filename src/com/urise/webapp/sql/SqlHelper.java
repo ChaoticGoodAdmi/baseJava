@@ -9,25 +9,21 @@ import java.sql.SQLException;
 
 public class SqlHelper {
 
-    private ConnectionFactory connectionFactory;
+    private final ConnectionFactory connectionFactory;
 
     public SqlHelper(ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
 
-    public <T> T execute(String sqlQuery, SqlQueryExecutor<T> executor) {
+    public <T> T execute(String sqlQuery, SqlQueryProcessor<T> processor) {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
-            return executor.execute(ps);
+            return processor.getQueryResult(ps);
         } catch (SQLException e) {
             if (e.getSQLState().equals("23505")) {
                 throw new ExistStorageException(null);
             }
             throw new StorageException(e);
         }
-    }
-
-    public void execute(String sqlQuery) {
-        execute(sqlQuery, PreparedStatement::execute);
     }
 }

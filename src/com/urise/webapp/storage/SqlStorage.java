@@ -5,13 +5,14 @@ import com.urise.webapp.model.Resume;
 import com.urise.webapp.sql.SqlHelper;
 
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SqlStorage implements Storage {
 
-    private SqlHelper sqlHelper;
+    private final SqlHelper sqlHelper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
@@ -19,7 +20,8 @@ public class SqlStorage implements Storage {
 
     @Override
     public void clear() {
-        sqlHelper.execute("DELETE FROM resume");
+        sqlHelper.execute("DELETE FROM resume",
+                PreparedStatement::execute);
     }
 
     @Override
@@ -99,10 +101,7 @@ public class SqlStorage implements Storage {
                 "SELECT COUNT(uuid) FROM resume",
                 ps -> {
                     ResultSet rs = ps.executeQuery();
-                    if (rs.next()) {
-                        return rs.getInt("COUNT");
-                    }
-                    return 0;
+                    return rs.next() ? rs.getInt("COUNT") : 0;
                 }
         );
     }
