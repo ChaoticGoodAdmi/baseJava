@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static com.urise.webapp.ResumeTestData.createTestResume;
 import static org.junit.Assert.assertEquals;
@@ -19,9 +20,9 @@ public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.get().getStorageDir();
 
     protected final Storage storage;
-    private static final String UUID_1 = "UUID_1";
-    private static final String UUID_2 = "UUID_2";
-    private static final String UUID_3 = "UUID_3";
+    private static final String UUID_1 = UUID.randomUUID().toString();
+    private static final String UUID_2 = UUID.randomUUID().toString();
+    private static final String UUID_3 = UUID.randomUUID().toString();
 
     private static final Resume R_1 = createTestResume(UUID_1, "NAME_1");
     private static final Resume R_2 = createTestResume(UUID_2, "NAME_2");
@@ -48,7 +49,7 @@ public abstract class AbstractStorageTest {
     @Test
     public void saveNonExistent() {
         int initialSize = storage.size();
-        Resume r4 = new Resume("UUID_4", "NAME_4");
+        Resume r4 = new Resume(UUID.randomUUID().toString(), "NAME_4");
         storage.save(r4);
         assertSize(initialSize + 1);
         assertGet(r4);

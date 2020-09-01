@@ -66,12 +66,12 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         return sqlHelper.executeReturnable(
-                "SELECT * FROM resume ORDER BY full_name",
+                "SELECT * FROM resume ORDER BY full_name, uuid",
                 ps -> {
                     ResultSet rs = ps.executeQuery();
                     List<Resume> resumes = new ArrayList<>();
                     while (rs.next()) {
-                        resumes.add(new Resume(rs.getString("uuid").trim(), rs.getString("full_name")));
+                        resumes.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
                     }
                     return resumes;
                 }
@@ -95,7 +95,7 @@ public class SqlStorage implements Storage {
     @Override
     public int size() {
         return sqlHelper.executeReturnable(
-                "SELECT COUNT(uuid) FROM resume",
+                "SELECT COUNT(*) FROM resume",
                 ps -> {
                     ResultSet rs = ps.executeQuery();
                     return rs.next() ? rs.getInt("COUNT") : 0;
