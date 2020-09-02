@@ -13,12 +13,12 @@ CREATE TABLE contact
     value text,
     CONSTRAINT contact_pkey PRIMARY KEY (id),
     CONSTRAINT contact_resume_uuid_fk FOREIGN KEY (resume_uuid)
-        REFERENCES resume (uuid) MATCH SIMPLE
+        REFERENCES resume (uuid)
         ON UPDATE RESTRICT
         ON DELETE CASCADE
 );
 
 CREATE UNIQUE INDEX contact_uuid_type_index
-    ON contact USING btree
-    (resume_uuid ASC NULLS LAST, type ASC NULLS LAST);
+    ON contact
+    (resume_uuid, type);
 
