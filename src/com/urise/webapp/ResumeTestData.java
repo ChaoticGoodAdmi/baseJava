@@ -22,9 +22,10 @@ public class ResumeTestData {
 
     public static Resume createTestResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
-        /*for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+        for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
             resume.setContact(entry.getKey(), entry.getValue());
         }
+        /*
         resume.setSection(SectionType.PERSONAL,
                 new TextSection("text of personal qualities"));
         resume.setSection(SectionType.OBJECTIVE,
