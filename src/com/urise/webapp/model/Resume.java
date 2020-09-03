@@ -77,7 +77,9 @@ public class Resume implements Comparable<Resume>, Serializable {
     public String toString() {
         return "Resume{" +
                 "uuid='" + uuid + '\'' +
-                ", fullName='" + fullName + '\'' +
+                "\nfullName='" + fullName + '\'' +
+                "\ncontacts=" + contacts +
+                "\nsections=" + sections +
                 '}';
     }
 
