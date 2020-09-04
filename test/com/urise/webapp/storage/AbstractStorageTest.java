@@ -3,6 +3,7 @@ package com.urise.webapp.storage;
 import com.urise.webapp.Config;
 import com.urise.webapp.exceptions.ExistStorageException;
 import com.urise.webapp.exceptions.NotExistStorageException;
+import com.urise.webapp.model.ContactType;
 import com.urise.webapp.model.Resume;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,10 +25,18 @@ public abstract class AbstractStorageTest {
     private static final String UUID_1 = UUID.randomUUID().toString();
     private static final String UUID_2 = UUID.randomUUID().toString();
     private static final String UUID_3 = UUID.randomUUID().toString();
+    private static final String UUID_4 = UUID.randomUUID().toString();
 
     private static final Resume R_1 = createTestResume(UUID_1, "NAME_1");
     private static final Resume R_2 = createTestResume(UUID_2, "NAME_2");
     private static final Resume R_3 = createTestResume(UUID_3, "NAME_3");
+    private static final Resume R_4 = new Resume(UUID_4, "test");
+
+    static {
+        R_4.setContact(ContactType.EMAIL, "test@mail.com");
+        R_4.setContact(ContactType.HOME_PAGE, "testPage");
+        R_4.setContact(ContactType.PHONE_NUMBER, "900");
+    }
 
     AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -50,10 +59,9 @@ public abstract class AbstractStorageTest {
     @Test
     public void saveNonExistent() {
         int initialSize = storage.size();
-        Resume r4 = new Resume(UUID.randomUUID().toString(), "NAME_4");
-        storage.save(r4);
+        storage.save(R_4);
         assertSize(initialSize + 1);
-        assertGet(r4);
+        assertGet(R_4);
     }
 
     @Test(expected = ExistStorageException.class)
@@ -83,8 +91,7 @@ public abstract class AbstractStorageTest {
 
     @Test(expected = NotExistStorageException.class)
     public void updateNonExistent() {
-        Resume r4 = new Resume("UUID_NOT_THERE");
-        storage.update(r4);
+        storage.update(R_4);
     }
 
     @Test
