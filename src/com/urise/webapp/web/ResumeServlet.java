@@ -4,6 +4,8 @@ import com.urise.webapp.Config;
 import com.urise.webapp.exceptions.NotExistStorageException;
 import com.urise.webapp.model.ContactType;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.model.Section;
+import com.urise.webapp.model.SectionType;
 import com.urise.webapp.storage.Storage;
 
 import javax.servlet.ServletConfig;
@@ -62,6 +64,7 @@ public class ResumeServlet extends HttpServlet {
         writer.write("<h3>Name:</h3>");
         writer.write(resume.getFullName());
         printContacts(writer, resume);
+        printSections(writer, resume);
     }
 
     private void printAllResumes (PrintWriter writer) {
@@ -77,8 +80,16 @@ public class ResumeServlet extends HttpServlet {
 
     private void printContacts (PrintWriter writer, Resume resume) {
         writer.write("<h3>Contacts</h3>");
-        for (Map.Entry<ContactType, String> contact : resume.getContacts().entrySet()) {
-            writer.write("<div>" + contact.getValue() + "</div>");
+        for (Map.Entry<ContactType, String> contactEntry : resume.getContacts().entrySet()) {
+            writer.write("<div>" + contactEntry.getValue() + "</div>");
+        }
+    }
+
+    private void printSections (PrintWriter writer, Resume resume) {
+        writer.write("<h3>Contacts</h3>");
+        for (Map.Entry<SectionType, Section> sectionEntry : resume.getSections().entrySet()) {
+            writer.write("<h3>" + sectionEntry.getKey() +"</h3>");
+            writer.write(String.valueOf(sectionEntry.getValue()));
         }
     }
 
@@ -104,7 +115,7 @@ public class ResumeServlet extends HttpServlet {
     }
 
     private void printHtmlCloser (PrintWriter writer) {
-           writer.write("</body>" +
-                   "     </html>");
+        writer.write("</body>" +
+                "     </html>");
     }
 }
