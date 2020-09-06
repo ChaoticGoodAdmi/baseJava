@@ -10,12 +10,7 @@ CREATE TABLE contact
     id serial NOT NULL,
     resume_uuid char(36) NOT NULL,
     type text,
-    value text,
-    CONSTRAINT contact_pkey PRIMARY KEY (id),
-    CONSTRAINT contact_resume_uuid_fk FOREIGN KEY (resume_uuid)
-        REFERENCES resume (uuid)
-        ON UPDATE RESTRICT
-        ON DELETE CASCADE
+    value text
 );
 
 CREATE UNIQUE INDEX contact_uuid_type_index
