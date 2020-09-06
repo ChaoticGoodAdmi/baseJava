@@ -44,6 +44,7 @@ public class ResumeServlet extends HttpServlet {
         if (uuid != null) {
             try {
                 Resume resume = storage.get(uuid);
+                writer.write("<a href=\"resume\"><<<</a>");
                 printResume(writer, resume);
             } catch (NotExistStorageException e) {
                 writer.write("There is no such resume in a database");
