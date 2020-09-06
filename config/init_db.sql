@@ -17,3 +17,10 @@ CREATE UNIQUE INDEX contact_uuid_type_index
     ON contact
     (resume_uuid, type);
 
+CREATE TABLE section
+(
+    id serial NOT NULL,
+    resume_uuid character(36) NOT NULL,
+    type text,
+    content text
+)

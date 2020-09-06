@@ -1,8 +1,9 @@
 package com.urise.webapp;
 
-import com.urise.webapp.model.ContactType;
-import com.urise.webapp.model.Resume;
+import com.urise.webapp.model.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -25,7 +26,6 @@ public class ResumeTestData {
         for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
             resume.setContact(entry.getKey(), entry.getValue());
         }
-        /*
         resume.setSection(SectionType.PERSONAL,
                 new TextSection("text of personal qualities"));
         resume.setSection(SectionType.OBJECTIVE,
@@ -48,7 +48,7 @@ public class ResumeTestData {
                         ))
                 )
         );
-        resume.setSection(SectionType.EXPERIENCE,
+        /*resume.setSection(SectionType.EXPERIENCE,
                 new CompanySection(
                         new ArrayList<>(Arrays.asList(
                                 new Company(
