@@ -23,4 +23,7 @@ CREATE TABLE section
     resume_uuid character(36) NOT NULL,
     type text,
     content text
-)
+);
+
+CREATE UNIQUE INDEX section_uuid_type_index
+    ON section (resume_uuid, type);
