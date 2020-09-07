@@ -45,32 +45,36 @@ public class Resume implements Comparable<Resume>, Serializable {
         return fullName;
     }
 
+    public String getContact(ContactType type) {
+        return getContacts().get(type);
+    }
+
     public Map<ContactType, String> getContacts() {
         return contacts;
     }
 
-    public void setContacts(Map<ContactType, String> contacts) {
-        this.contacts = contacts;
-    }
-
-    public void setContact(ContactType type, String link) {
-        contacts.put(type, link);
+    public Section getSection(SectionType type) {
+        return sections.get(type);
     }
 
     public Map<SectionType, Section> getSections() {
         return sections;
     }
 
-    public void setSections(Map<SectionType, Section> sections) {
-        this.sections = sections;
+    public void setContact(ContactType type, String link) {
+        contacts.put(type, link);
+    }
+
+    public void setContacts(Map<ContactType, String> contacts) {
+        this.contacts = contacts;
     }
 
     public void setSection(SectionType type, Section section) {
         sections.put(type, section);
     }
 
-    public Section getSection(SectionType type) {
-        return sections.get(type);
+    public void setSections(Map<SectionType, Section> sections) {
+        this.sections = sections;
     }
 
     @Override
