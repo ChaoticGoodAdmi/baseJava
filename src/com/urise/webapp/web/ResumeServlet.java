@@ -23,7 +23,7 @@ public class ResumeServlet extends HttpServlet {
     private Storage storage;
 
     @Override
-    public void init (ServletConfig config) throws ServletException {
+    public void init(ServletConfig config) throws ServletException {
         super.init(config);
         try {
             Class.forName("org.postgresql.Driver");
@@ -34,7 +34,7 @@ public class ResumeServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         PrintWriter writer = resp.getWriter();
@@ -56,10 +56,10 @@ public class ResumeServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost (HttpServletRequest req, HttpServletResponse resp) {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
     }
 
-    private void printResume (PrintWriter writer, Resume resume) {
+    private void printResume(PrintWriter writer, Resume resume) {
         writer.write("<h3>UUID:</h3>");
         writer.write(resume.getUuid());
         writer.write("<h3>Name:</h3>");
@@ -68,7 +68,7 @@ public class ResumeServlet extends HttpServlet {
         printSections(writer, resume);
     }
 
-    private void printAllResumes (PrintWriter writer) {
+    private void printAllResumes(PrintWriter writer) {
         writer.write("<table><tr><th>UUID</th><th>Name</th>");
         List<Resume> resumes = storage.getAllSorted();
         for (Resume r : resumes) {
@@ -79,22 +79,22 @@ public class ResumeServlet extends HttpServlet {
         }
     }
 
-    private void printContacts (PrintWriter writer, Resume resume) {
+    private void printContacts(PrintWriter writer, Resume resume) {
         writer.write("<h3>Contacts</h3>");
         for (Map.Entry<ContactType, String> contactEntry : resume.getContacts().entrySet()) {
             writer.write("<div>" + contactEntry.getValue() + "</div>");
         }
     }
 
-    private void printSections (PrintWriter writer, Resume resume) {
+    private void printSections(PrintWriter writer, Resume resume) {
         writer.write("<h3>Contacts</h3>");
         for (Map.Entry<SectionType, Section> sectionEntry : resume.getSections().entrySet()) {
-            writer.write("<h3>" + sectionEntry.getKey() +"</h3>");
+            writer.write("<h3>" + sectionEntry.getKey() + "</h3>");
             writer.write(String.valueOf(sectionEntry.getValue()));
         }
     }
 
-    private void printTableRow (PrintWriter writer, String... text) {
+    private void printTableRow(PrintWriter writer, String... text) {
         writer.write("<tr>");
         for (String element : text) {
             writer.write("<td>");
@@ -104,7 +104,7 @@ public class ResumeServlet extends HttpServlet {
         writer.write("</tr>");
     }
 
-    private void printHtmlHeader (PrintWriter writer) {
+    private void printHtmlHeader(PrintWriter writer) {
         writer.write("<!DOCTYPE html>\n" +
                 "            <html>\n" +
                 "                <head>\n" +
@@ -115,7 +115,7 @@ public class ResumeServlet extends HttpServlet {
                 "                <body>");
     }
 
-    private void printHtmlCloser (PrintWriter writer) {
+    private void printHtmlCloser(PrintWriter writer) {
         writer.write("</body>" +
                 "     </html>");
     }

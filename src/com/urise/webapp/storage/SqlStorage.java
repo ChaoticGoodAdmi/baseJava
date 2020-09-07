@@ -11,18 +11,18 @@ public class SqlStorage implements Storage {
 
     private final SqlHelper sqlHelper;
 
-    public SqlStorage (String dbUrl, String dbUser, String dbPassword) {
+    public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
     }
 
     @Override
-    public void clear () {
+    public void clear() {
         sqlHelper.executeReturnable("DELETE FROM resume r",
                 PreparedStatement::execute);
     }
 
     @Override
-    public void save (Resume r) {
+    public void save(Resume r) {
         sqlHelper.executeTransactional(conn -> {
                     try (PreparedStatement ps = conn.prepareStatement("INSERT INTO resume (uuid, full_name) VALUES (?, ?)")) {
                         ps.setString(1, r.getUuid());
@@ -37,7 +37,7 @@ public class SqlStorage implements Storage {
     }
 
     @Override
-    public void delete (String uuid) {
+    public void delete(String uuid) {
         sqlHelper.execute(
                 "DELETE FROM resume r WHERE uuid = ?",
                 ps -> {
@@ -49,12 +49,12 @@ public class SqlStorage implements Storage {
     }
 
     @Override
-    public Resume get (String uuid) {
+    public Resume get(String uuid) {
         return getResume(uuid);
     }
 
     @Override
-    public List<Resume> getAllSorted () {
+    public List<Resume> getAllSorted() {
         return sqlHelper.executeReturnable(
                 "SELECT * FROM resume ORDER BY full_name, uuid",
                 ps -> {
@@ -70,7 +70,7 @@ public class SqlStorage implements Storage {
     }
 
     @Override
-    public void update (Resume r) {
+    public void update(Resume r) {
         sqlHelper.executeTransactional(conn -> {
                     try (PreparedStatement ps = conn.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
                         ps.setString(1, r.getFullName());
@@ -89,7 +89,7 @@ public class SqlStorage implements Storage {
     }
 
     @Override
-    public int size () {
+    public int size() {
         return sqlHelper.executeReturnable(
                 "SELECT COUNT(*) FROM resume r",
                 ps -> {
@@ -99,7 +99,7 @@ public class SqlStorage implements Storage {
         );
     }
 
-    private Resume getResume (String uuid) {
+    private Resume getResume(String uuid) {
         Resume resume = sqlHelper.executeReturnable(
                 "  SELECT * FROM resume r " +
                         "    WHERE r.uuid = ?",
@@ -117,7 +117,7 @@ public class SqlStorage implements Storage {
         return resume;
     }
 
-    private void putContacts (Resume r, Connection conn) throws SQLException {
+    private void putContacts(Resume r, Connection conn) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement(
                 "INSERT INTO contact (resume_uuid, type, value) VALUES (?, ?, ?)")) {
             for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
@@ -130,7 +130,7 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private Map<ContactType, String> getContacts (String uuid) {
+    private Map<ContactType, String> getContacts(String uuid) {
         return sqlHelper.executeReturnable(
                 "SELECT * " +
                         "   FROM contact" +
@@ -150,7 +150,7 @@ public class SqlStorage implements Storage {
                 });
     }
 
-    private void putSections (Resume r, Connection conn) throws SQLException {
+    private void putSections(Resume r, Connection conn) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement(
                 "INSERT INTO section (resume_uuid, type, content) VALUES (?, ?, ?)")) {
             for (Map.Entry<SectionType, Section> e : r.getSections().entrySet()) {
@@ -165,7 +165,6 @@ public class SqlStorage implements Storage {
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
                         StringJoiner listToText = new StringJoiner("\\n");
-                        String prefix = "";
                         for (String listElement : ((ListSection) e.getValue()).getList()) {
                             listToText.add(listElement);
                         }
@@ -178,7 +177,7 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private Map<SectionType, Section> getSections (String uuid) {
+    private Map<SectionType, Section> getSections(String uuid) {
         return sqlHelper.executeReturnable(
                 "SELECT * " +
                         "   FROM section" +
@@ -206,7 +205,7 @@ public class SqlStorage implements Storage {
                 });
     }
 
-    private void deleteDetails (Resume r, String sqlQuery) {
+    private void deleteDetails(Resume r, String sqlQuery) {
         sqlHelper.execute(sqlQuery,
                 ps -> {
                     ps.setString(1, r.getUuid());
@@ -214,11 +213,11 @@ public class SqlStorage implements Storage {
                 });
     }
 
-    private void deleteContacts (Resume r) {
+    private void deleteContacts(Resume r) {
         deleteDetails(r, "DELETE FROM contact WHERE resume_uuid = ?");
     }
 
-    private void deleteSections (Resume r) {
+    private void deleteSections(Resume r) {
         deleteDetails(r, "DELETE FROM section WHERE resume_uuid = ?");
     }
 }
