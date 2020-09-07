@@ -8,7 +8,7 @@ CREATE TABLE resume
 CREATE TABLE contact
 (
     id serial NOT NULL,
-    resume_uuid char(36) NOT NULL,
+    resume_uuid char(36) NOT NULL REFERENCES resume (uuid) ON DELETE CASCADE,
     type text,
     value text
 );
@@ -20,7 +20,7 @@ CREATE UNIQUE INDEX contact_uuid_type_index
 CREATE TABLE section
 (
     id serial NOT NULL,
-    resume_uuid character(36) NOT NULL,
+    resume_uuid character(36) NOT NULL REFERENCES resume (uuid) ON DELETE CASCADE,
     type text,
     content text
 );
