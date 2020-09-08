@@ -1,6 +1,7 @@
 package com.urise.webapp.web;
 
 import com.urise.webapp.Config;
+import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.Storage;
 
 import javax.servlet.ServletConfig;
@@ -27,8 +28,30 @@ public class ResumeServlet extends HttpServlet {
 
     @Override
     protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        req.setAttribute("resumes", storage.getAllSorted());
-        req.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(req, resp);
+        String uuid = req.getParameter("uuid");
+        String action = req.getParameter("action");
+        if (action == null) {
+            req.setAttribute("resumes", storage.getAllSorted());
+            req.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(req, resp);
+            return;
+        }
+        Resume r;
+        switch (action) {
+            case "delete":
+                storage.delete(uuid);
+                resp.sendRedirect("resume");
+                return;
+            case "view":
+            case "edit":
+                r = storage.get(uuid);
+                break;
+            default:
+                throw new IllegalArgumentException("Action " + action + " is illegal");
+        }
+        req.setAttribute("resume", r);
+        req.getRequestDispatcher(
+                ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
+        ).forward(req, resp);
     }
 
     @Override
