@@ -199,18 +199,18 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void deleteDetails(Resume r, Connection conn, String sqlQuery) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
-            ps.setString(1, r.getUuid());
-            ps.execute();
-        }
-    }
-
     private void deleteContacts(Resume r, Connection conn) throws SQLException {
         deleteDetails(r, conn, "DELETE FROM contact WHERE resume_uuid = ?");
     }
 
     private void deleteSections(Resume r, Connection conn) throws SQLException {
         deleteDetails(r, conn, "DELETE FROM section WHERE resume_uuid = ?");
+    }
+
+    private void deleteDetails(Resume r, Connection conn, String sqlQuery) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+            ps.setString(1, r.getUuid());
+            ps.execute();
+        }
     }
 }
