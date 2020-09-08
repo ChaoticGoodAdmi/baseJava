@@ -79,9 +79,9 @@ public class SqlStorage implements Storage {
                             throw new NotExistStorageException(r.getUuid());
                         }
                     }
-                    deleteContacts(r);
+                    deleteContacts(r, conn);
                     putContacts(r, conn);
-                    deleteSections(r);
+                    deleteSections(r, conn);
                     putSections(r, conn);
                     return null;
                 }
@@ -164,11 +164,8 @@ public class SqlStorage implements Storage {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        StringJoiner listToText = new StringJoiner("\\n");
-                        for (String listElement : ((ListSection) e.getValue()).getList()) {
-                            listToText.add(listElement);
-                        }
-                        ps.setString(3, String.valueOf(listToText));
+                        String listToText = String.join("\\n", ((ListSection) e.getValue()).getList());
+                        ps.setString(3, listToText);
                         break;
                 }
                 ps.addBatch();
@@ -205,19 +202,18 @@ public class SqlStorage implements Storage {
                 });
     }
 
-    private void deleteDetails(Resume r, String sqlQuery) {
-        sqlHelper.execute(sqlQuery,
-                ps -> {
-                    ps.setString(1, r.getUuid());
-                    ps.execute();
-                });
+    private void deleteDetails(Resume r, Connection conn, String sqlQuery) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+            ps.setString(1, r.getUuid());
+            ps.execute();
+        }
     }
 
-    private void deleteContacts(Resume r) {
-        deleteDetails(r, "DELETE FROM contact WHERE resume_uuid = ?");
+    private void deleteContacts(Resume r, Connection conn) throws SQLException {
+        deleteDetails(r, conn, "DELETE FROM contact WHERE resume_uuid = ?");
     }
 
-    private void deleteSections(Resume r) {
-        deleteDetails(r, "DELETE FROM section WHERE resume_uuid = ?");
+    private void deleteSections(Resume r, Connection conn) throws SQLException {
+        deleteDetails(r, conn, "DELETE FROM section WHERE resume_uuid = ?");
     }
 }
