@@ -4,5 +4,5 @@ VALUES ('215ae369-7e86-4a18-bd75-b51651f68be3', 'Name1'),
        ('f0f9998f-7581-499a-99bd-8305a6c8a4e2', 'Name3');
 
 INSERT INTO contact (resume_uuid, "type", "value")
-values ('55d174ca-aa3d-409e-8ed9-59b03da7282a', 'SKYPE', 'skype1'),
-       ('55d174ca-aa3d-409e-8ed9-59b03da7282a', 'PHONE_NUMBER', '900');
+values ('215ae369-7e86-4a18-bd75-b51651f68be3', 'SKYPE', 'skype1'),
+       ('215ae369-7e86-4a18-bd75-b51651f68be3', 'PHONE_NUMBER', '900');
