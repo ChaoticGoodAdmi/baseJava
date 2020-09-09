@@ -11,6 +11,10 @@
 <body>
 <jsp:include page="fragments/footer.jsp"/>
 <section>
+    <jsp:useBean id="problems" scope="request" type="java.util.List"/>
+    <c:forEach var="problem" items="<%=problems%>">
+        <span style="color: red; ">${problem}</span><br>
+    </c:forEach>
     <form method="post" action="resume" enctype="application/x-www-form-urlencoded">
         <input name="uuid" type="hidden" value="${resume.uuid}">
         <dl>

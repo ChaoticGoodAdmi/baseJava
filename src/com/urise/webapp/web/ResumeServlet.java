@@ -4,6 +4,7 @@ import com.urise.webapp.Config;
 import com.urise.webapp.model.ContactType;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.Storage;
+import com.urise.webapp.util.Validator;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -11,6 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 public class ResumeServlet extends HttpServlet {
 
@@ -40,10 +44,14 @@ public class ResumeServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         req.setCharacterEncoding("UTF-8");
         String uuid = req.getParameter("uuid");
         String fullName = req.getParameter("fullName");
+        List<String> validatingProblems = new ArrayList<>();
+        if (fullName == null || fullName.trim().length() == 0) {
+            validatingProblems.add("Name must not be empty");
+        }
         Resume r;
         if (!uuid.equals("")) {
             r = storage.get(uuid);
@@ -53,6 +61,12 @@ public class ResumeServlet extends HttpServlet {
             r = new Resume(fullName);
             fillResume(req, r, fullName);
             storage.save(r);
+        }
+        validateResume(r, validatingProblems);
+        if (validatingProblems.size() > 0) {
+            req.setAttribute("problems", validatingProblems);
+            req.setAttribute("resume", r);
+            req.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(req, resp);
         }
         resp.sendRedirect("resume");
     }
@@ -77,6 +91,7 @@ public class ResumeServlet extends HttpServlet {
                 throw new IllegalArgumentException("Action " + action + " is illegal");
         }
         req.setAttribute("resume", r);
+        req.setAttribute("problems", new ArrayList<String>());
         req.getRequestDispatcher(
                 ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
         ).forward(req, resp);
@@ -91,6 +106,39 @@ public class ResumeServlet extends HttpServlet {
             } else {
                 r.getContacts().remove(type);
             }
+        }
+    }
+
+    private void validateResume(Resume resume, List<String> validatingProblems) {
+        String phoneNumber = resume.getContact(ContactType.PHONE_NUMBER);
+        validate(phoneNumber, Validator.validatePhoneNumber(phoneNumber),
+                s -> validatingProblems.add("Phone number must be like this: 79009991122"));
+
+        String email = resume.getContact(ContactType.EMAIL);
+        validate(email, Validator.validateEmail(email),
+                s -> validatingProblems.add("E-mail address is incorrect"));
+
+        String linkedInProfile = resume.getContact(ContactType.LINKED_IN);
+        validate(linkedInProfile, Validator.validateUrl(linkedInProfile, "linkedin.com"),
+                s -> validatingProblems.add("Link to a LinkedIn profile is incorrect"));
+
+        String gitProfile = resume.getContact(ContactType.GITHUB);
+        validate(gitProfile, Validator.validateUrl(gitProfile, "github.com"),
+                s -> validatingProblems.add("Link to a Github profile is incorrect"));
+
+        String stackProfile = resume.getContact(ContactType.STACKOVERFLOW);
+        validate(stackProfile, Validator.validateUrl(stackProfile, "stackoverflow.com"),
+                s -> validatingProblems.add("Link to a StackOverflow profile is incorrect"));
+
+        String homePage = resume.getContact(ContactType.HOME_PAGE);
+        validate(homePage, Validator.validateUrl(homePage),
+                s -> validatingProblems.add("Home page must be a valid URL"));
+
+    }
+
+    private void validate(String value, Boolean condition, Consumer<String> consumer) {
+        if (!value.equals("") && (value.trim().length() == 0 || !condition)) {
+            consumer.accept(value);
         }
     }
 }
