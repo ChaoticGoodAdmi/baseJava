@@ -11,6 +11,7 @@
 <body>
 <jsp:include page="fragments/footer.jsp"/>
 <section>
+    <dl><a href="resume">Back to resumes list</a></dl>
     <h2>${resume.fullName}&nbsp;<a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/pencil.png" alt="Edit"></a></h2>
     <p>
         <c:forEach var="contactEntry" items="${resume.contacts}">

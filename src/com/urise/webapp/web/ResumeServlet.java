@@ -11,14 +11,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 public class ResumeServlet extends HttpServlet {
 
     private Storage storage;
 
     @Override
-    public void init (ServletConfig config) throws ServletException {
+    public void init(ServletConfig config) throws ServletException {
         super.init(config);
         try {
             Class.forName("org.postgresql.Driver");
@@ -29,7 +28,7 @@ public class ResumeServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet (HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String uuid = req.getParameter("uuid");
         String action = req.getParameter("action");
         if (action == null) {
@@ -37,6 +36,29 @@ public class ResumeServlet extends HttpServlet {
             req.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(req, resp);
             return;
         }
+        processAction(req, resp, uuid, action);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        req.setCharacterEncoding("UTF-8");
+        String uuid = req.getParameter("uuid");
+        String fullName = req.getParameter("fullName");
+        Resume r;
+        if (!uuid.equals("")) {
+            r = storage.get(uuid);
+            fillResume(req, r, fullName);
+            storage.update(r);
+        } else {
+            r = new Resume(fullName);
+            fillResume(req, r, fullName);
+            storage.save(r);
+        }
+        resp.sendRedirect("resume");
+    }
+
+    private void processAction(HttpServletRequest req, HttpServletResponse resp, String uuid, String action)
+            throws IOException, ServletException {
         Resume r;
         switch (action) {
             case "delete":
@@ -45,7 +67,11 @@ public class ResumeServlet extends HttpServlet {
                 return;
             case "view":
             case "edit":
-                r = storage.get(uuid);
+                if (!uuid.equals("")) {
+                    r = storage.get(uuid);
+                } else {
+                    r = new Resume();
+                }
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
@@ -56,12 +82,7 @@ public class ResumeServlet extends HttpServlet {
         ).forward(req, resp);
     }
 
-    @Override
-    protected void doPost (HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        req.setCharacterEncoding("UTF-8");
-        String uuid = req.getParameter("uuid");
-        String fullName = req.getParameter("fullName");
-        Resume r = storage.get(uuid);
+    private void fillResume(HttpServletRequest req, Resume r, String fullName) {
         r.setFullName(fullName);
         for (ContactType type : ContactType.values()) {
             String value = req.getParameter(type.name());
@@ -71,8 +92,5 @@ public class ResumeServlet extends HttpServlet {
                 r.getContacts().remove(type);
             }
         }
-        storage.update(r);
-        resp.sendRedirect("resume");
     }
-
 }
