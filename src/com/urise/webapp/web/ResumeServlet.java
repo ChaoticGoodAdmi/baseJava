@@ -1,6 +1,7 @@
 package com.urise.webapp.web;
 
 import com.urise.webapp.Config;
+import com.urise.webapp.model.ContactType;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.Storage;
 
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 public class ResumeServlet extends HttpServlet {
 
@@ -55,7 +57,22 @@ public class ResumeServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost (HttpServletRequest req, HttpServletResponse resp) {
+    protected void doPost (HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        req.setCharacterEncoding("UTF-8");
+        String uuid = req.getParameter("uuid");
+        String fullName = req.getParameter("fullName");
+        Resume r = storage.get(uuid);
+        r.setFullName(fullName);
+        for (ContactType type : ContactType.values()) {
+            String value = req.getParameter(type.name());
+            if (value != null && value.trim().length() != 0) {
+                r.setContact(type, value);
+            } else {
+                r.getContacts().remove(type);
+            }
+        }
+        storage.update(r);
+        resp.sendRedirect("resume");
     }
 
 }

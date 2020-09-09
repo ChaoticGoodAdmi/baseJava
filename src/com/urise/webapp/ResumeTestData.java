@@ -2,6 +2,7 @@ package com.urise.webapp;
 
 import com.urise.webapp.model.*;
 
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -48,7 +49,7 @@ public class ResumeTestData {
                         ))
                 )
         );
-        /*resume.setSection(SectionType.EXPERIENCE,
+        resume.setSection(SectionType.EXPERIENCE,
                 new CompanySection(
                         new ArrayList<>(Arrays.asList(
                                 new Company(
@@ -125,7 +126,7 @@ public class ResumeTestData {
                                 )
                         ))
                 )
-        );*/
+        );
         return resume;
     }
 }
