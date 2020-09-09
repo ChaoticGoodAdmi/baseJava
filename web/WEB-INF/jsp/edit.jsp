@@ -12,7 +12,7 @@
 <jsp:include page="fragments/footer.jsp"/>
 <section>
     <form method="post" action="resume" enctype="application/x-www-form-urlencoded">
-        <input name="uuid" value="${resume.uuid}">
+        <input name="uuid" type="hidden" value="${resume.uuid}">
         <dl>
             <dt>Имя:</dt>
             <dd><input type="text" name="fullName" size="50" value="${resume.fullName}"></dd>
