@@ -43,7 +43,7 @@ public class SqlStorage implements Storage {
                 "DELETE FROM resume r WHERE uuid = ?",
                 ps -> {
                     ps.setString(1, uuid);
-                    if (!ps.execute()) {
+                    if (ps.executeUpdate() == 0) {
                         throw new NotExistStorageException(uuid);
                     }
                 });
@@ -158,22 +158,6 @@ public class SqlStorage implements Storage {
                 ps.setString(1, r.getUuid());
                 ps.setString(2, e.getKey().name());
                 ps.setString(3, JsonParser.write(e.getValue(), Section.class));
-/*                SectionType sectionType = e.getKey();
-                switch (sectionType) {
-                    case PERSONAL:
-                    case OBJECTIVE:
-                        ps.setString(3, ((TextSection) e.getValue()).getText());
-                        break;
-                    case ACHIEVEMENT:
-                    case QUALIFICATIONS:
-                        StringJoiner listToText = new StringJoiner("\\n");
-                        String prefix = "";
-                        for (String listElement : ((ListSection) e.getValue()).getList()) {
-                            listToText.add(listElement);
-                        }
-                        ps.setString(3, String.valueOf(listToText));
-                        break;
-                }*/
                 ps.addBatch();
             }
             ps.executeBatch();
@@ -192,18 +176,6 @@ public class SqlStorage implements Storage {
                     while (rs.next()) {
                         SectionType sectionType = SectionType.valueOf(rs.getString("type"));
                         sectionMap.put(sectionType, JsonParser.read(rs.getString("content"), Section.class));
-/*                        switch (sectionType) {
-                            case PERSONAL:
-                            case OBJECTIVE:
-                                sectionMap.put(sectionType, new TextSection(rs.getString("content")));
-                                break;
-                            case ACHIEVEMENT:
-                            case QUALIFICATIONS:
-                                sectionMap.put(sectionType, new ListSection(
-                                        Arrays.asList(rs.getString("content").split("\\\\n"))
-                                ));
-                                break;
-                        }*/
                     }
                     return sectionMap;
                 });
