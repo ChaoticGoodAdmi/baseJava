@@ -76,14 +76,14 @@
                                            max="12" min="1" maxlength="2" style="width: 40px"
                                            value="${position.startDate.month.value}">/
                                     <input type="number" name="startYear"
-                                           max="${currentYear}" min="1990" maxlength="4" style="width: 60px"
+                                           max="${currentYear}" min="1900" maxlength="4" style="width: 60px"
                                            value="${position.startDate.year}">
                                     -
                                     <input type="number" name="endMonth"
                                            max="12" min="1" maxlength="2" style="width: 40px"
                                            value="${position.endDate.month.value}">/
                                     <input type="number" name="endYear"
-                                           max="${currentYear}" min="1990" maxlength="4" style="width: 60px"
+                                           max="${currentYear}" min="1900" maxlength="4" style="width: 60px"
                                            value="${position.endDate.year}">
                                 </td>
                                 <td>
@@ -116,7 +116,7 @@
                                        max="12" min="1" maxlength="2" style="width: 40px"
                                        value="">/
                                 <input type="number" name="newEndYear"
-                                       max="${currentYear}" min="1990" maxlength="4" style="width: 60px"
+                                       max="${currentYear}" min="1900" maxlength="4" style="width: 60px"
                                        value="">
                             </td>
                             <td>

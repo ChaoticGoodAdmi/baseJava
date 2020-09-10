@@ -1,8 +1,7 @@
 package com.urise.webapp.web;
 
 import com.urise.webapp.Config;
-import com.urise.webapp.model.ContactType;
-import com.urise.webapp.model.Resume;
+import com.urise.webapp.model.*;
 import com.urise.webapp.storage.Storage;
 import com.urise.webapp.util.Validator;
 
@@ -15,6 +14,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ResumeServlet extends HttpServlet {
 
@@ -99,12 +100,36 @@ public class ResumeServlet extends HttpServlet {
 
     private void fillResume(HttpServletRequest req, Resume r, String fullName) {
         r.setFullName(fullName);
+        fillContacts(req, r);
+        fillSections(req, r);
+    }
+
+    private void fillContacts(HttpServletRequest req, Resume r) {
         for (ContactType type : ContactType.values()) {
             String value = req.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
                 r.setContact(type, value);
             } else {
                 r.getContacts().remove(type);
+            }
+        }
+    }
+
+    private void fillSections(HttpServletRequest req, Resume r) {
+        for (SectionType type : SectionType.values()) {
+            String value = req.getParameter(type.name());
+            switch (type) {
+                case PERSONAL:
+                case OBJECTIVE:
+                    r.setSection(type, new TextSection(value));
+                    break;
+                case ACHIEVEMENT:
+                case QUALIFICATIONS:
+                    List<String> list = Stream.of(value.trim().split("\n"))
+                            .filter(entity -> entity.trim().length() > 0)
+                            .map(String::new)
+                            .collect(Collectors.toList());
+                    r.setSection(type, new ListSection(list));
             }
         }
     }
