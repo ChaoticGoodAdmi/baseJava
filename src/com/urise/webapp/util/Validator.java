@@ -9,7 +9,7 @@ public class Validator {
     }
 
     public static boolean validateUrl(String value) {
-        return value.matches("\\b(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
+        return value.matches("\\b((https?)://)?[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
     }
 
     public static boolean validateUrl(String value, String webSite) {

@@ -27,6 +27,7 @@
             </c:forEach>
         </p>
     </div>
+    <hr>
     <div>
         <c:forEach var="sectionEntry" items="${resume.sections}">
             <jsp:useBean id="sectionEntry"
@@ -70,9 +71,11 @@
                             <table cellpadding="10px">
                             <tr>
                                 <td style="vertical-align: top">
-                                    <%=position.getStartDate().getMonth().getValue()%>/<%=position.getStartDate().getYear()%>
+                                    <%=position.getStartDate().getMonth().getValue()%>
+                                    /<%=position.getStartDate().getYear()%>
                                     -
-                                    <%=position.getEndDate().getMonth().getValue()%>/<%=position.getEndDate().getYear()%>
+                                    <%=position.getEndDate().getMonth().getValue()%>
+                                    /<%=position.getEndDate().getYear()%>
                                 </td>
                                 <td>
                                     <b><%=position.getTitle()%>
