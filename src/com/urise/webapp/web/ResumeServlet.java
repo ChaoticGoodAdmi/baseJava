@@ -190,11 +190,11 @@ public class ResumeServlet extends HttpServlet {
         String[] titles = req.getParameterValues(prefix + "title");
         String[] descriptions = req.getParameterValues(prefix + "description");
         for (int j = 0; j < titles.length; j++) {
-            if (endMonths[j].equals("") && endYears[j].equals("")) {
-                positions.add(new Company.Position(titles[j], descriptions[j],
-                        Integer.parseInt(startYears[j]), Month.of(Integer.parseInt(startMonths[j]))));
-            } else {
-                positions.add(new Company.Position(titles[j], descriptions[j],
+            if (!titles[j].equals("")) {
+                positions.add(endMonths[j].equals("") && endYears[j].equals("") ?
+                        new Company.Position(titles[j], descriptions[j],
+                        Integer.parseInt(startYears[j]), Month.of(Integer.parseInt(startMonths[j]))) :
+                        new Company.Position(titles[j], descriptions[j],
                         Integer.parseInt(startYears[j]), Month.of(Integer.parseInt(startMonths[j])),
                         Integer.parseInt(endYears[j]), Month.of(Integer.parseInt(endMonths[j]))));
             }
