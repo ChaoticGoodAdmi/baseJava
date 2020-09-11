@@ -20,6 +20,10 @@ public class CompanySection extends Section {
         return list;
     }
 
+    public void addToList(Company company) {
+        list.add(company);
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

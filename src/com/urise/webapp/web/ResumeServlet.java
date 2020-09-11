@@ -87,6 +87,8 @@ public class ResumeServlet extends HttpServlet {
             case "edit":
                 if (!uuid.equals("")) {
                     r = storage.get(uuid);
+                    insertEmptyCompany(r, SectionType.EXPERIENCE);
+                    insertEmptyCompany(r, SectionType.EDUCATION);
                 } else {
                     r = getEmptyResume();
                 }
@@ -119,9 +121,7 @@ public class ResumeServlet extends HttpServlet {
                 case EXPERIENCE:
                 case EDUCATION:
                     r.setSection(sectionType, new CompanySection(Collections.singletonList(
-                            new Company(new Link("", ""),
-                                    Collections.singletonList(
-                                            new Company.Position("", "", 1900, Month.of(1)))))));
+                            getEmptyCompany())));
                     break;
             }
         }
@@ -193,10 +193,10 @@ public class ResumeServlet extends HttpServlet {
             if (!titles[j].equals("")) {
                 positions.add(endMonths[j].equals("") && endYears[j].equals("") ?
                         new Company.Position(titles[j], descriptions[j],
-                        Integer.parseInt(startYears[j]), Month.of(Integer.parseInt(startMonths[j]))) :
+                                Integer.parseInt(startYears[j]), Month.of(Integer.parseInt(startMonths[j]))) :
                         new Company.Position(titles[j], descriptions[j],
-                        Integer.parseInt(startYears[j]), Month.of(Integer.parseInt(startMonths[j])),
-                        Integer.parseInt(endYears[j]), Month.of(Integer.parseInt(endMonths[j]))));
+                                Integer.parseInt(startYears[j]), Month.of(Integer.parseInt(startMonths[j])),
+                                Integer.parseInt(endYears[j]), Month.of(Integer.parseInt(endMonths[j]))));
             }
         }
         return positions;
@@ -233,5 +233,15 @@ public class ResumeServlet extends HttpServlet {
         if (!value.equals("") && (value.trim().length() == 0 || !condition)) {
             consumer.accept(value);
         }
+    }
+
+    private Company getEmptyCompany() {
+        return new Company(new Link("", ""),
+                Collections.singletonList(
+                        new Company.Position("", "", 1900, Month.of(1))));
+    }
+
+    private void insertEmptyCompany(Resume r, SectionType education) {
+        ((CompanySection) r.getSection(education)).getList().add(getEmptyCompany());
     }
 }
