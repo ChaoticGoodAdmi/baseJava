@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Month;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -68,8 +70,9 @@ public class ResumeServlet extends HttpServlet {
             req.setAttribute("problems", validatingProblems);
             req.setAttribute("resume", r);
             req.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(req, resp);
+        } else {
+            resp.sendRedirect("resume");
         }
-        resp.sendRedirect("resume");
     }
 
     private void processAction(HttpServletRequest req, HttpServletResponse resp, String uuid, String action)
@@ -85,7 +88,7 @@ public class ResumeServlet extends HttpServlet {
                 if (!uuid.equals("")) {
                     r = storage.get(uuid);
                 } else {
-                    r = new Resume();
+                    r = getEmptyResume();
                 }
                 break;
             default:
@@ -96,6 +99,33 @@ public class ResumeServlet extends HttpServlet {
         req.getRequestDispatcher(
                 ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
         ).forward(req, resp);
+    }
+
+    private Resume getEmptyResume() {
+        Resume r = new Resume();
+        for (ContactType contactType : ContactType.values()) {
+            r.setContact(contactType, "");
+        }
+        for (SectionType sectionType : SectionType.values()) {
+            switch (sectionType) {
+                case PERSONAL:
+                case OBJECTIVE:
+                    r.setSection(sectionType, new TextSection(""));
+                    break;
+                case ACHIEVEMENT:
+                case QUALIFICATIONS:
+                    r.setSection(sectionType, new ListSection(Collections.singletonList("")));
+                    break;
+                case EXPERIENCE:
+                case EDUCATION:
+                    r.setSection(sectionType, new CompanySection(Collections.singletonList(
+                            new Company(new Link("", ""),
+                                    Collections.singletonList(
+                                            new Company.Position("", "", 1900, Month.of(1)))))));
+                    break;
+            }
+        }
+        return r;
     }
 
     private void fillResume(HttpServletRequest req, Resume r, String fullName) {
@@ -118,6 +148,7 @@ public class ResumeServlet extends HttpServlet {
     private void fillSections(HttpServletRequest req, Resume r) {
         for (SectionType type : SectionType.values()) {
             String value = req.getParameter(type.name());
+            String[] values = req.getParameterValues(type.name() + ".companyName");
             switch (type) {
                 case PERSONAL:
                 case OBJECTIVE:
@@ -130,8 +161,45 @@ public class ResumeServlet extends HttpServlet {
                             .map(String::new)
                             .collect(Collectors.toList());
                     r.setSection(type, new ListSection(list));
+                    break;
+                case EXPERIENCE:
+                case EDUCATION:
+                    List<Company> companies = new ArrayList<>();
+                    if (values != null) {
+                        String[] companyUrls = req.getParameterValues(type.name() + ".companyUrl");
+                        for (int i = 0; i < values.length; i++) {
+                            if (!values[i].equals("")) {
+                                List<Company.Position> positions = getPositions(req, type, i);
+                                companies.add(new Company(new Link(companyUrls[i], values[i]), positions));
+                            }
+                        }
+                    }
+                    r.setSection(type, new CompanySection(companies));
+                    break;
             }
         }
+    }
+
+    private List<Company.Position> getPositions(HttpServletRequest req, SectionType type, int i) {
+        List<Company.Position> positions = new ArrayList<>();
+        String prefix = type.name() + "." + i + ".";
+        String[] startMonths = req.getParameterValues(prefix + "startMonth");
+        String[] startYears = req.getParameterValues(prefix + "startYear");
+        String[] endMonths = req.getParameterValues(prefix + "endMonth");
+        String[] endYears = req.getParameterValues(prefix + "endYear");
+        String[] titles = req.getParameterValues(prefix + "title");
+        String[] descriptions = req.getParameterValues(prefix + "description");
+        for (int j = 0; j < titles.length; j++) {
+            if (endMonths[j].equals("") && endYears[j].equals("")) {
+                positions.add(new Company.Position(titles[j], descriptions[j],
+                        Integer.parseInt(startYears[j]), Month.of(Integer.parseInt(startMonths[j]))));
+            } else {
+                positions.add(new Company.Position(titles[j], descriptions[j],
+                        Integer.parseInt(startYears[j]), Month.of(Integer.parseInt(startMonths[j])),
+                        Integer.parseInt(endYears[j]), Month.of(Integer.parseInt(endMonths[j]))));
+            }
+        }
+        return positions;
     }
 
     private void validateResume(Resume resume, List<String> validatingProblems) {
