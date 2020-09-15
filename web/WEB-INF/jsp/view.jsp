@@ -8,27 +8,29 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <jsp:useBean id="resume" type="com.urise.webapp.model.Resume" scope="request"/>
     <title>Резюме ${resume.fullName}</title>
 </head>
 <body>
 <jsp:include page="fragments/footer.jsp"/>
+<br>
 <section>
-    <dl><a href="resume">Back to resumes list</a></dl>
-    <div>
-        <h2>${resume.fullName}&nbsp;<a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/pencil.png"
-                                                                                          alt="Edit"></a></h2>
-        <p>
+    <div><a class="button" href="resume">Back to resumes list</a></div>
+    <div class="sidebar">
+        <p class="name"><h2>${resume.fullName}&nbsp;<a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/pencil.png"
+                                                                                             alt="Edit"></a></h2></p>
+        <div id="contacts"><p>
             <c:forEach var="contactEntry" items="${resume.contacts}">
                 <jsp:useBean id="contactEntry"
                              type="java.util.Map.Entry<com.urise.webapp.model.ContactType, java.lang.String>"/>
-                <%=contactEntry.getKey().toHtml(contactEntry.getValue())%><br/>
+            <p class="contact"><%=contactEntry.getKey().toHtml(contactEntry.getValue())%>
+            </p>
             </c:forEach>
-        </p>
+        </p></div>
     </div>
     <hr>
-    <div>
+    <div class="main">
         <c:forEach var="sectionEntry" items="${resume.sections}">
             <jsp:useBean id="sectionEntry"
                          type="java.util.Map.Entry<com.urise.webapp.model.SectionType, com.urise.webapp.model.Section>"/>
