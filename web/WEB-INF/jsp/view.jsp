@@ -38,7 +38,7 @@
             <jsp:useBean id="sectionType" type="com.urise.webapp.model.SectionType"/>
             <c:set var="section" value="${sectionEntry.value}"/>
             <jsp:useBean id="section" type="com.urise.webapp.model.Section"/>
-            <h2>
+            <h2 class="sectionTitle">
                 <%=sectionType.getTitle()%>
             </h2>
             <c:choose>
@@ -64,7 +64,7 @@
                                     ${company.homePage.name}
                                 </c:when>
                                 <c:otherwise>
-                                    <a href="//${company.homePage.url}">${company.homePage.name}</a>
+                                    <a class="button" href="//${company.homePage.url}">${company.homePage.name}</a>
                                 </c:otherwise>
                             </c:choose>
                         </h3>

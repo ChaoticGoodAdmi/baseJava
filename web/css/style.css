@@ -12,6 +12,11 @@ footer {
     padding: 20px 0;
 }
 
+header, footer a {
+    text-decoration: none;
+    color: black;
+}
+
 a[href*="skype:"] {
     padding-left: 20px !important;
     background: url(../img/skype.png) no-repeat center left;
@@ -55,6 +60,7 @@ dd {
 }
 
 .button {
+    text-decoration: none;
     background-color: #064579;
     color: #fff;
     padding: 10px 15px;
@@ -62,16 +68,8 @@ dd {
 }
 
 .button:hover {
-    background: red;
+    background: #A6C9E2;
     color: #fff;
-}
-
-.contacts a {
-    color: white;
-}
-
-a:active {
-    color: green;
 }
 
 .sidebar {
@@ -87,11 +85,14 @@ a:active {
 
 .sidebar .contact {
     padding: 6px 8px 6px 16px;
-
     text-decoration: none;
     font-size: 17px;
     color: #2E6E9E;
     display: block;
+}
+
+.sidebar a {
+
 }
 
 .sidebar p:hover {
@@ -107,4 +108,36 @@ a:active {
     margin-left: 270px;
     font-size: 18px;
     padding: 0 10px;
+}
+
+.sectionTitle {
+    color: #2E6E9E;
+}
+
+ul {
+    list-style: none;
+    counter-reset: counter;
+}
+
+li {
+
+    counter-increment: counter;
+    margin: 0.25rem;
+}
+
+li::before {
+    content: counter(counter);
+    background: #2E6E9E;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: inline-block;
+    line-height: 2rem;
+    color: white;
+    text-align: center;
+    margin-right: 0.5rem;
+}
+
+body {
+    font-family: 'PT Serif', serif;
 }
