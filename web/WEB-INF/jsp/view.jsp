@@ -18,8 +18,9 @@
 <section>
     <div><a class="button" href="resume">Back to resumes list</a></div>
     <div class="sidebar">
-        <p class="name"><h2>${resume.fullName}&nbsp;<a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/pencil.png"
-                                                                                             alt="Edit"></a></h2></p>
+        <p class="name">
+        <h2>${resume.fullName}&nbsp;<a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/pencil.png"
+                                                                                          alt="Edit"></a></h2>
         <div id="contacts"><p>
             <c:forEach var="contactEntry" items="${resume.contacts}">
                 <jsp:useBean id="contactEntry"
@@ -27,9 +28,8 @@
             <p class="contact"><%=contactEntry.getKey().toHtml(contactEntry.getValue())%>
             </p>
             </c:forEach>
-        </p></div>
+            </p></div>
     </div>
-    <hr>
     <div class="main">
         <c:forEach var="sectionEntry" items="${resume.sections}">
             <jsp:useBean id="sectionEntry"

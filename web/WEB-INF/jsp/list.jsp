@@ -11,11 +11,13 @@
 <body>
 <jsp:include page="fragments/header.jsp"/>
 <section>
+    <br>
     <dl>
-        <a href="resume?uuid=&action=edit">
+        <a class="button" href="resume?uuid=&action=edit">
             <img src="img/add.png" alt="Add new resume"> Add new resume
         </a>
     </dl>
+    <br>
     <table class="resumeList">
         <thead>
         <tr>
