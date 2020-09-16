@@ -94,7 +94,9 @@ public class ResumeServlet extends HttpServlet {
                 if (!uuid.equals("")) {
                     r = storage.get(uuid);
                     insertEmptyCompany(r, SectionType.EXPERIENCE);
+                    insertEmptyPositions(r, SectionType.EXPERIENCE);
                     insertEmptyCompany(r, SectionType.EDUCATION);
+                    insertEmptyPositions(r, SectionType.EDUCATION);
                 } else {
                     r = getEmptyResume();
                 }
@@ -107,6 +109,18 @@ public class ResumeServlet extends HttpServlet {
         req.getRequestDispatcher(
                 ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
         ).forward(req, resp);
+    }
+
+    private void insertEmptyPositions(Resume r, SectionType type) {
+        CompanySection section = (CompanySection) r.getSection(type);
+        List<Company> companyList = section.getList();
+        List<Company> companiesWithEmptyPositions = new ArrayList<>();
+        for (Company company : companyList) {
+            List<Company.Position> positions = new ArrayList<>(company.getPositions());
+            positions.add(new Company.Position());
+            companiesWithEmptyPositions.add(new Company(company.getHomePage(), positions));
+        }
+        r.setSection(type, new CompanySection(companiesWithEmptyPositions));
     }
 
     private Resume getEmptyResume() {
