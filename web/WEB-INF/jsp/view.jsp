@@ -97,7 +97,6 @@
                     </c:forEach>
                 </c:when>
             </c:choose>
-
         </c:forEach>
     </div>
 </section>

@@ -88,6 +88,8 @@ public class ResumeServlet extends HttpServlet {
                 resp.sendRedirect("resume");
                 return;
             case "view":
+                r = storage.get(uuid);
+                break;
             case "edit":
                 if (!uuid.equals("")) {
                     r = storage.get(uuid);
@@ -242,7 +244,7 @@ public class ResumeServlet extends HttpServlet {
     private Company getEmptyCompany() {
         return new Company(new Link("", ""),
                 Collections.singletonList(
-                        new Company.Position("", "", 1900, Month.of(1))));
+                        new Company.Position()));
     }
 
     private void insertEmptyCompany(Resume r, SectionType education) {
