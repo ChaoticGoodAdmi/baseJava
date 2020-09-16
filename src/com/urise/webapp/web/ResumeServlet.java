@@ -51,29 +51,26 @@ public class ResumeServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         String uuid = req.getParameter("uuid");
         String fullName = req.getParameter("fullName");
-        List<String> validatingProblems = new ArrayList<>();
-        if (fullName == null || fullName.trim().length() == 0) {
-            validatingProblems.add("Name must not be empty");
-        }
         Resume r;
         boolean isCreating = uuid.equals("");
-        if (!isCreating) {
-            r = storage.get(uuid);
-            fillResume(req, r, fullName);
-        } else {
+        if (isCreating) {
             r = new Resume(fullName);
             fillResume(req, r, fullName);
+        } else {
+            r = storage.get(uuid);
+            fillResume(req, r, fullName);
         }
+        List<String> validatingProblems = new ArrayList<>();
         validateResume(r, validatingProblems);
         if (validatingProblems.size() > 0) {
             req.setAttribute("problems", validatingProblems);
-            req.setAttribute("resume", r);
+            req.setAttribute("resume", getEmptyResume());
             req.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(req, resp);
         } else {
-            if (!isCreating) {
-                storage.update(r);
-            } else {
+            if (isCreating) {
                 storage.save(r);
+            } else {
+                storage.update(r);
             }
             resp.sendRedirect("resume");
         }

@@ -3,17 +3,14 @@ package com.urise.webapp;
 import com.urise.webapp.model.*;
 
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
 
 public class ResumeTestData {
 
     private final static Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
 
     static {
-        contacts.put(ContactType.PHONE_NUMBER, "+7 (999) 999 99 99");
+        contacts.put(ContactType.PHONE_NUMBER, "79999999999");
         contacts.put(ContactType.SKYPE, "skype.profile");
         contacts.put(ContactType.EMAIL, "email@adress.com");
         contacts.put(ContactType.LINKED_IN, "https://www.linkedin.com/in/profile");
@@ -73,7 +70,7 @@ public class ResumeTestData {
                                 ),
                                 new Company(
                                         new Link(null, "Company_2"),
-                                        new ArrayList<>(Arrays.asList(
+                                        new ArrayList<>(Collections.singletonList(
                                                 new Company.Position(
                                                         "Job_title",
                                                         "Job_description",
@@ -113,7 +110,7 @@ public class ResumeTestData {
                                 ),
                                 new Company(
                                         new Link("www.uni2.com", "University_2"),
-                                        new ArrayList<>(Arrays.asList(
+                                        new ArrayList<>(Collections.singletonList(
                                                 new Company.Position(
                                                         "Course_title",
                                                         null,
