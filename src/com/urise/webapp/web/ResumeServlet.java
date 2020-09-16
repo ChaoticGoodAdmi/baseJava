@@ -111,18 +111,6 @@ public class ResumeServlet extends HttpServlet {
         ).forward(req, resp);
     }
 
-    private void insertEmptyPositions(Resume r, SectionType type) {
-        CompanySection section = (CompanySection) r.getSection(type);
-        List<Company> companyList = section.getList();
-        List<Company> companiesWithEmptyPositions = new ArrayList<>();
-        for (Company company : companyList) {
-            List<Company.Position> positions = new ArrayList<>(company.getPositions());
-            positions.add(new Company.Position());
-            companiesWithEmptyPositions.add(new Company(company.getHomePage(), positions));
-        }
-        r.setSection(type, new CompanySection(companiesWithEmptyPositions));
-    }
-
     private Resume getEmptyResume() {
         Resume r = new Resume();
         for (ContactType contactType : ContactType.values()) {
@@ -263,5 +251,17 @@ public class ResumeServlet extends HttpServlet {
 
     private void insertEmptyCompany(Resume r, SectionType education) {
         ((CompanySection) r.getSection(education)).getList().add(getEmptyCompany());
+    }
+
+    private void insertEmptyPositions(Resume r, SectionType type) {
+        CompanySection section = (CompanySection) r.getSection(type);
+        List<Company> companyList = section.getList();
+        List<Company> companiesWithEmptyPositions = new ArrayList<>();
+        for (Company company : companyList) {
+            List<Company.Position> positions = new ArrayList<>(company.getPositions());
+            positions.add(new Company.Position());
+            companiesWithEmptyPositions.add(new Company(company.getHomePage(), positions));
+        }
+        r.setSection(type, new CompanySection(companiesWithEmptyPositions));
     }
 }
