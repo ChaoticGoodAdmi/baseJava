@@ -14,17 +14,18 @@
     <title>Резюме ${resume.fullName}</title>
 </head>
 <body>
-<jsp:include page="fragments/footer.jsp"/>
+<jsp:include page="fragments/header.jsp"/>
+<br>
 <section>
-    <jsp:useBean id="problems" scope="request" type="java.util.List"/>
-    <c:forEach var="problem" items="<%=problems%>">
-        <span style="color: red; ">${problem}</span><br>
-    </c:forEach>
     <form method="post" action="resume" enctype="application/x-www-form-urlencoded">
+        <jsp:useBean id="problems" scope="request" type="java.util.List"/>
+        <c:forEach var="problem" items="<%=problems%>">
+            <span style="color: red; ">${problem}</span><br>
+        </c:forEach>
         <input name="uuid" type="hidden" value="${resume.uuid}">
         <dl>
             <dt>Имя:</dt>
-            <dd><input type="text" name="fullName" size="50" value="${resume.fullName}"></dd>
+            <dd><input type="text" name="fullName" required size="50" value="${resume.fullName}"></dd>
         </dl>
         <hr>
         <h3>Контакты:</h3>
@@ -64,7 +65,7 @@
                                placeholder="Company web-page" value="${company.homePage.url}">
                         <c:forEach var="position" items="<%=company.getPositions()%>">
                             <jsp:useBean id="position" type="com.urise.webapp.model.Company.Position"/>
-                            <table cellpadding="10px">
+                            <table>
                             <tr>
                                 <td style="vertical-align: top">Date of working:
                                     <jsp:useBean id="date" class="java.util.Date"/>
@@ -97,8 +98,8 @@
             </c:choose></dd>
             </c:forEach>
         </dl>
-        <button type="submit">Сохранить</button>
-        <button onclick="window.history.back()">Отменить</button>
+        <button type="submit">Save</button>
+        <button onclick="window.history.back()">Cancel</button>
     </form>
 </section>
 <jsp:include page="fragments/footer.jsp"/>

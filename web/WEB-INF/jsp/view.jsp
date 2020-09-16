@@ -9,11 +9,12 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/view_style.css">
     <jsp:useBean id="resume" type="com.urise.webapp.model.Resume" scope="request"/>
     <title>Резюме ${resume.fullName}</title>
 </head>
 <body>
-<jsp:include page="fragments/footer.jsp"/>
+<jsp:include page="fragments/header.jsp"/>
 <br>
 <section>
     <div><a class="button" href="resume">Back to resumes list</a></div>
@@ -70,7 +71,7 @@
                         </h3>
                         <c:forEach var="position" items="<%=company.getPositions()%>">
                             <jsp:useBean id="position" type="com.urise.webapp.model.Company.Position"/>
-                            <table cellpadding="10px">
+                            <table>
                             <tr>
                                 <td style="vertical-align: top">
                                     <%=position.getStartDate().getMonth().getValue()%>

@@ -56,14 +56,13 @@ public class ResumeServlet extends HttpServlet {
             validatingProblems.add("Name must not be empty");
         }
         Resume r;
-        if (!uuid.equals("")) {
+        boolean isCreating = uuid.equals("");
+        if (!isCreating) {
             r = storage.get(uuid);
             fillResume(req, r, fullName);
-            storage.update(r);
         } else {
             r = new Resume(fullName);
             fillResume(req, r, fullName);
-            storage.save(r);
         }
         validateResume(r, validatingProblems);
         if (validatingProblems.size() > 0) {
@@ -71,6 +70,11 @@ public class ResumeServlet extends HttpServlet {
             req.setAttribute("resume", r);
             req.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(req, resp);
         } else {
+            if (!isCreating) {
+                storage.update(r);
+            } else {
+                storage.save(r);
+            }
             resp.sendRedirect("resume");
         }
     }

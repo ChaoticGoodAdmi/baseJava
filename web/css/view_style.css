@@ -1,0 +1,90 @@
+a[href*="skype:"] {
+    padding-left: 20px !important;
+    background: url(../img/skype.png) no-repeat center left;
+}
+
+a[href*="mailto:"] {
+    padding-left: 20px;
+    background: url(../img/email.png) no-repeat center left;
+}
+
+a[href*="https://www.linkedin.com"] {
+    padding-left: 20px;
+    background: url(../img/lin.png) no-repeat center left;
+}
+
+a[href*="github.com"] {
+    padding-left: 20px;
+    background: url(../img/gh.png) no-repeat center left;
+}
+
+a[href*="https://stackoverflow.com"] {
+    padding-left: 20px;
+    background: url(../img/so.png) no-repeat center left;
+}
+
+.sidebar {
+    width: 250px;
+    position: fixed;
+    z-index: 1;
+    top: 140px;
+    left: 20px;
+    background: #eee;
+    overflow-x: hidden;
+    padding: 8px 0;
+}
+
+.sidebar .contact {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    color: #2E6E9E;
+    display: block;
+}
+
+.sidebar a {
+
+}
+
+.sidebar p:hover {
+    background-color: #064579;
+    color: white;
+}
+
+.sidebar p:hover a {
+    color: white;
+}
+
+.main {
+    margin-left: 270px;
+    font-size: 18px;
+    padding: 0 10px;
+}
+
+.sectionTitle {
+    color: #2E6E9E;
+}
+
+ul {
+    list-style: none;
+    counter-reset: counter;
+}
+
+li {
+
+    counter-increment: counter;
+    margin: 0.25rem;
+}
+
+li::before {
+    content: counter(counter);
+    background: #2E6E9E;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: inline-block;
+    line-height: 2rem;
+    color: white;
+    text-align: center;
+    margin-right: 0.5rem;
+}
