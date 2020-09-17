@@ -86,9 +86,9 @@
                                 </td>
                                 <td>
                                     <input type="text" size="45" name='${sectionType}.${counter.index}.title'
-                                           placeholder="Job title" value="${position.title}"><br>
+                                           placeholder="Title" value="${position.title}"><br>
                                     <input type="text" size="45" name='${sectionType}.${counter.index}.description'
-                                           placeholder="jobDescription" value="${position.description}">
+                                           placeholder="Description" value="${position.description}">
                                 </td>
                             </tr>
                         </c:forEach>
@@ -99,7 +99,7 @@
             </c:forEach>
         </dl>
         <button type="submit">Save</button>
-        <button onclick="window.history.back()">Cancel</button>
+        <button type="button" onclick="window.history.back()">Cancel</button>
     </form>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
