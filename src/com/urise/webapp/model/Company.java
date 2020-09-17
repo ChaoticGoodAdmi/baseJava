@@ -16,6 +16,7 @@ import java.util.Objects;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Company implements Serializable {
     private static final long serialVersionUID = 1L;
+    public static final Company EMPTY = new Company(Link.EMPTY, Collections.singletonList(Position.EMPTY));
 
     private Link homePage;
     private List<Position> positions;
@@ -65,6 +66,7 @@ public class Company implements Serializable {
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Comparable<Position>, Serializable {
         private static final long serialVersionUID = 1L;
+        public static final Position EMPTY = new Position();
 
         private String title;
         private String description;

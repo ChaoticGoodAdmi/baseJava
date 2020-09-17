@@ -1,10 +1,12 @@
 package com.urise.webapp.model;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class CompanySection extends Section {
     private static final long serialVersionUID = 1L;
+    public static final CompanySection EMPTY = new CompanySection(Collections.singletonList(Company.EMPTY));
 
     private List<Company> list;
 

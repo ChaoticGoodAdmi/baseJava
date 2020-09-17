@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -64,7 +63,7 @@ public class ResumeServlet extends HttpServlet {
         validateResume(r, validatingProblems);
         if (validatingProblems.size() > 0) {
             req.setAttribute("problems", validatingProblems);
-            req.setAttribute("resume", getEmptyResume());
+            req.setAttribute("resume", Resume.EMPTY);
             req.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(req, resp);
         } else {
             if (isCreating) {
@@ -95,7 +94,7 @@ public class ResumeServlet extends HttpServlet {
                     insertEmptyCompany(r, SectionType.EDUCATION);
                     insertEmptyPositions(r, SectionType.EDUCATION);
                 } else {
-                    r = getEmptyResume();
+                    r = Resume.EMPTY;
                 }
                 break;
             default:
@@ -106,31 +105,6 @@ public class ResumeServlet extends HttpServlet {
         req.getRequestDispatcher(
                 ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
         ).forward(req, resp);
-    }
-
-    private Resume getEmptyResume() {
-        Resume r = new Resume();
-        for (ContactType contactType : ContactType.values()) {
-            r.setContact(contactType, "");
-        }
-        for (SectionType sectionType : SectionType.values()) {
-            switch (sectionType) {
-                case PERSONAL:
-                case OBJECTIVE:
-                    r.setSection(sectionType, new TextSection(""));
-                    break;
-                case ACHIEVEMENT:
-                case QUALIFICATIONS:
-                    r.setSection(sectionType, new ListSection(Collections.singletonList("")));
-                    break;
-                case EXPERIENCE:
-                case EDUCATION:
-                    r.setSection(sectionType, new CompanySection(Collections.singletonList(
-                            getEmptyCompany())));
-                    break;
-            }
-        }
-        return r;
     }
 
     private void fillResume(HttpServletRequest req, Resume r, String fullName) {
@@ -240,14 +214,8 @@ public class ResumeServlet extends HttpServlet {
         }
     }
 
-    private Company getEmptyCompany() {
-        return new Company(new Link("", ""),
-                Collections.singletonList(
-                        new Company.Position()));
-    }
-
-    private void insertEmptyCompany(Resume r, SectionType education) {
-        ((CompanySection) r.getSection(education)).getList().add(getEmptyCompany());
+    private void insertEmptyCompany(Resume r, SectionType sectionType) {
+        ((CompanySection) r.getSection(sectionType)).getList().add(Company.EMPTY);
     }
 
     private void insertEmptyPositions(Resume r, SectionType type) {
@@ -256,7 +224,7 @@ public class ResumeServlet extends HttpServlet {
         List<Company> companiesWithEmptyPositions = new ArrayList<>();
         for (Company company : companyList) {
             List<Company.Position> positions = new ArrayList<>(company.getPositions());
-            positions.add(new Company.Position());
+            positions.add(Company.Position.EMPTY);
             companiesWithEmptyPositions.add(new Company(company.getHomePage(), positions));
         }
         r.setSection(type, new CompanySection(companiesWithEmptyPositions));
