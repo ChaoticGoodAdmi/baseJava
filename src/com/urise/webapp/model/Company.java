@@ -38,6 +38,10 @@ public class Company implements Serializable {
         return positions;
     }
 
+    public void setPositions(List<Position> positions) {
+        this.positions = positions;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

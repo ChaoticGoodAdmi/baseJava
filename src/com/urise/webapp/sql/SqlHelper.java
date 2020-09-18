@@ -34,17 +34,15 @@ public class SqlHelper {
         }
     }
 
-    public <T> T executeTransactional(SqlTransaction<T> executor) {
+    public <T> void executeTransactional(SqlTransaction<T> executor) {
         try (Connection conn = connectionFactory.getConnection()) {
             try {
                 conn.setAutoCommit(false);
                 T res = executor.execute(conn);
                 conn.commit();
-                return res;
             } catch (SQLException e) {
                 conn.rollback();
                 throwAppropriateException(e);
-                return null;
             }
         } catch (SQLException e) {
             throw new StorageException(e);

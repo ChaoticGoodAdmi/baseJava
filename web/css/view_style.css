@@ -25,7 +25,7 @@ a[href*="https://stackoverflow.com"] {
 
 .sidebar {
     width: 250px;
-    position: fixed;
+    position: absolute;
     z-index: 1;
     top: 140px;
     left: 20px;
