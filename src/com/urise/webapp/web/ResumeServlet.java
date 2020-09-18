@@ -229,10 +229,6 @@ public class ResumeServlet extends HttpServlet {
     }
 
     private void validateResume(Resume resume, List<String> validatingProblems) {
-        String phoneNumber = resume.getContact(ContactType.PHONE_NUMBER);
-        validate(phoneNumber, Validator.validatePhoneNumber(phoneNumber),
-                s -> validatingProblems.add("Phone number must be like this: 79009991122"));
-
         String email = resume.getContact(ContactType.EMAIL);
         validate(email, Validator.validateEmail(email),
                 s -> validatingProblems.add("E-mail address is incorrect"));
